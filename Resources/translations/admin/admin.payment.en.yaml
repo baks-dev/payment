@@ -1,31 +1,39 @@
 admin:
 
   page:
-    index: 'Regional contacts'
-    new: 'Add a regional contact'
-    edit: 'Edit regional contact'
-    delete: 'Delete a regional contact'
+    index: 'Payment methods'
+    new: 'Add payment method'
+    edit: 'Edit payment method'
+    delete: 'Remove payment method'
 
   breadcrumb:
-    index: 'Regional contacts'
-    new: 'Add a regional contact'
-    edit: 'Edit regional contact'
-    delete: 'Delete a regional contact'
-
+    index: 'Methods of accepting payments'
+    new: 'Add payment method'
+    edit: 'Edit payment method'
+    delete: 'Delete payment method'
 
   success:
-    new: 'Regional contact successfully added'
-    update: 'Regional contact updated successfully'
-    delete: 'Regional contact successfully removed to trash'
-    restore: 'Regional contact successfully restored'
+    new: 'Payment methods added successfully'
+    update: 'Payment methods updated successfully'
+    delete: 'Payment methods successfully deleted to cart'
+    restore: 'Payment methods restored successfully'
 
   danger:
-    new: '%s: Error when adding a regional contact'
-    update: '%s: Error updating regional contact'
-    delete: '%s: Error when deleting a regional contact'
-    restore: '%s: Error when restoring a regional contact'
+    new: '%s: Error adding payment method'
+    update: '%s: Error updating payment method'
+    delete: '%s: Error deleting payment method'
+    restore: '%s: Error restoring payment method'
+
   form:
     header:
-      delete: 'региональный'
+      delete: 'Delete payment method'
     label:
-      delete: 'Вы уверены, что желаете удалить регион'
+      delete: 'Are you sure you want to delete the payment method'
+      trans:
+        name: 'Payment method name'
+        desc: 'Short description'
+      field:
+        trans:
+          name: 'Field name'
+          desc: 'Short description'
+      active: 'Active'

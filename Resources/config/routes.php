@@ -21,26 +21,14 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-use BaksDev\Payment\Entity\Cover\PaymentCover;
-use Symfony\Config\TwigConfig;
 
-return static function(TwigConfig $config, ContainerConfigurator $configurator)
+return function (RoutingConfigurator $routes)
 {
-	$config->path(__DIR__.'/../view', 'Payment');
-	
-	/** Абсолютный Путь для загрузки обложек способа оплаты */
-	$configurator->parameters()->set(
-		PaymentCover::TABLE,
-		'%kernel.project_dir%/public/upload/'.PaymentCover::TABLE.'/'
-	);
-	
-	/** Относительный путь обложек способа оплаты */
-	$config->global(PaymentCover::TABLE)->value('/upload/'.PaymentCover::TABLE.'/');
-	
+    
+    $routes->import(__DIR__.'/../../Controller', 'annotation')
+      ->prefix(\BaksDev\Core\Type\Locale\Locale::routes())
+      ->namePrefix('Payment:');
+
 };
-
-
-
-

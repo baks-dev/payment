@@ -25,41 +25,59 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Controller\Admin;
 
-use BaksDev\Contacts\Region\Repository\AllContactsRegion\AllContactsRegionInterface;
+use BaksDev\Contacts\Region\Entity\ContactsRegion;
+use BaksDev\Contacts\Region\UseCase\Admin\NewEdit\ContactsRegionDTO;
+use BaksDev\Contacts\Region\UseCase\Admin\NewEdit\ContactsRegionForm;
+use BaksDev\Contacts\Region\UseCase\Admin\NewEdit\ContactsRegionHandler;
 use BaksDev\Core\Controller\AbstractController;
-use BaksDev\Core\Form\Search\SearchDTO;
-use BaksDev\Core\Form\Search\SearchForm;
 use BaksDev\Core\Services\Security\RoleSecurity;
-
-use BaksDev\Payment\Repository\AllPayments\AllPaymentsInterface;
+use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryDTO;
+use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryForm;
+use BaksDev\Payment\Entity\Payment;
+use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentDTO;
+use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentForm;
+use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PAYMENT'])]
-final class IndexController extends AbstractController
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PAYMENT_NEW'])]
+final class NewController extends AbstractController
 {
-	#[Route('/admin/payments/{page<\d+>}', name: 'admin.index', methods: ['GET', 'POST'])]
-	public function index(
+	#[Route('/admin/payment/new', name: 'admin.newedit.new', methods: ['GET', 'POST'])]
+	public function new(
 		Request $request,
-		AllPaymentsInterface $allPayments,
-		int $page = 0,
-	) : Response {
+		PaymentHandler $paymentHandler
+	) : Response
+	{
+		
+		$PaymentDTO = new PaymentDTO();
+	
+		/* Форма */
+		$form = $this->createForm(PaymentForm::class, $PaymentDTO);
+		$form->handleRequest($request);
 		
 		
 		
-		/* Поиск */
-		$search = new SearchDTO();
-		$searchForm = $this->createForm(SearchForm::class, $search);
-		$searchForm->handleRequest($request);
+		if($form->isSubmitted() && $form->isValid() && $form->has('payment'))
+		{
+			
+			$Payment = $paymentHandler->handle($PaymentDTO);
+			
+			if($Payment instanceof Payment)
+			{
+				$this->addFlash('success', 'admin.success.new', 'admin.payment');
+				
+				return $this->redirectToRoute('Payment:admin.index');
+				
+			}
+			
+			$this->addFlash('danger', 'admin.danger.new', 'admin.payment', $Payment);
+			
+			return $this->redirectToReferer();
+		}
 		
-		/* Получаем список */
-		$payments = $allPayments->fetchAllPaymentsAssociative($search);
-		
-		return $this->render(
-			[
-				'query' => $payments,
-				'search' => $searchForm->createView(),
-			]); 
+		return $this->render(['form' => $form->createView()]);
 	}
+	
 }

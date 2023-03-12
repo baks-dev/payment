@@ -1,0 +1,71 @@
+{% trans_default_domain('admin.products.category') %}
+
+<tr class="vertical-middle">
+	
+	
+	<td class="text-nowrap">
+		{# Пользовательское меню #}
+		{{ include(_self|replace({ "card.html.twig": "_usecase.html.twig" })) }}
+	</td>
+	
+	
+	<td class="text-center">
+		{{ item.payment_sort }}
+	</td>
+	
+	<td class="text-center">
+		{% if item.payment_active %}
+			<span class="badge bg-success">Активный</span>
+		{% else %}
+			<span class="badge bg-danger">Отключен</span>
+		{% endif %}
+	</td>
+	
+	<td class="w-100">
+		
+		
+		<div class="w-100 d-flex align-items-center gap-5">
+			
+			{# Превью  #}
+			
+			{% set img_path = item.payment_cover_cdn == true ? cdn_host : '' %}
+			{% set payment_cover_ext = item.payment_cover_cdn == true ? 'small.'~item.payment_cover_ext : item.payment_cover_ext %}
+			
+			{% if is_granted(ROLE~'_EDIT') or is_granted('ROLE_ADMIN') %}
+				<a href="{{ path('Payment:admin.newedit.edit', { id: item.event }) }}" class="pe-3">
+					<div class="rounded-3 bg-contain lazy p-1" style="width: 50px; height: 50px;"
+							data-bg="{{ item.payment_cover_name ? img_path ~ item.payment_cover_name ~ payment_cover_ext : '/assets/img/blank.svg' }}">
+					</div>
+				</a>
+			{% else %}
+				<div class="rounded-3 bg-contain lazy p-1" style="width: 50px; height: 50px;"
+						data-bg="{{ item.payment_cover_name ? img_path ~ item.payment_cover_name ~ payment_cover_ext : '/assets/img/blank.svg' }}">
+				</div>
+			{% endif %}
+			
+			
+			<div class="ms-0">
+				
+				{% if is_granted(ROLE~'_EDIT') or is_granted('ROLE_ADMIN') %}
+					{# Название #}
+					<a href="{{ path('Payment:admin.newedit.edit', {id: item.event }) }}"
+							class="text-decoration-none"
+					>{{ item.payment_name }}</a>
+				{% else %}
+					{{ item.payment_name }}
+				{% endif %}
+				
+				{# Описание #}
+				<div class="text-muted">
+					{{ string_width(item.payment_description, 150)|raw }}
+				</div>
+			
+			</div>
+		</div>
+	
+	
+	</td>
+	
+	
+
+</tr>

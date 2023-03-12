@@ -23,24 +23,22 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use BaksDev\Payment\Entity\Cover\PaymentCover;
-use Symfony\Config\TwigConfig;
+use BaksDev\Payment\Entity;
+use BaksDev\Payment\EntityListeners;
 
-return static function(TwigConfig $config, ContainerConfigurator $configurator)
+return static function (ContainerConfigurator $configurator)
 {
-	$config->path(__DIR__.'/../view', 'Payment');
-	
-	/** Абсолютный Путь для загрузки обложек способа оплаты */
-	$configurator->parameters()->set(
-		PaymentCover::TABLE,
-		'%kernel.project_dir%/public/upload/'.PaymentCover::TABLE.'/'
-	);
-	
-	/** Относительный путь обложек способа оплаты */
-	$config->global(PaymentCover::TABLE)->value('/upload/'.PaymentCover::TABLE.'/');
-	
+    $services = $configurator->services()
+      ->defaults()
+      ->autowire()
+      ->autoconfigure();
+    
+    /** EntityListeners */
+    $services->set(EntityListeners\PaymentModifyListener::class)
+      ->class(EntityListeners\PaymentModifyListener::class)
+      ->tag(
+        'doctrine.orm.entity_listener',
+        ['event' => 'prePersist', 'lazy' => true, 'entity' => Entity\Modify\PaymentModify::class]);
+    
+
 };
-
-
-
-

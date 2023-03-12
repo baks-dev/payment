@@ -25,41 +25,57 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Controller\Admin;
 
-use BaksDev\Contacts\Region\Repository\AllContactsRegion\AllContactsRegionInterface;
 use BaksDev\Core\Controller\AbstractController;
-use BaksDev\Core\Form\Search\SearchDTO;
-use BaksDev\Core\Form\Search\SearchForm;
 use BaksDev\Core\Services\Security\RoleSecurity;
-
-use BaksDev\Payment\Repository\AllPayments\AllPaymentsInterface;
+use BaksDev\Payment\Entity\Payment;
+use BaksDev\Payment\Entity\Event\PaymentEvent;
+use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentDTO;
+use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentForm;
+use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentHandler;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PAYMENT'])]
-final class IndexController extends AbstractController
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PAYMENT_EDIT'])]
+final class EditController extends AbstractController
 {
-	#[Route('/admin/payments/{page<\d+>}', name: 'admin.index', methods: ['GET', 'POST'])]
-	public function index(
+	#[Route('/admin/payment/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
+	public function edit(
 		Request $request,
-		AllPaymentsInterface $allPayments,
-		int $page = 0,
-	) : Response {
+		#[MapEntity] PaymentEvent $Event,
+		PaymentHandler $paymentHandler,
+		
+	) : Response
+	{
+
+		$PaymentDTO = new PaymentDTO();
+		$Event->getDto($PaymentDTO);
+		
+		/* Форма */
+		$form = $this->createForm(PaymentForm::class, $PaymentDTO);
+		$form->handleRequest($request);
 		
 		
+		if($form->isSubmitted() && $form->isValid() && $form->has('payment'))
+		{
+			
+			$Payment = $paymentHandler->handle($PaymentDTO);
+			
+			if($Payment instanceof Payment)
+			{
+				$this->addFlash('success', 'admin.success.update', 'admin.payment');
+				
+				return $this->redirectToRoute('Payment:admin.index');
+				
+			}
+			
+			$this->addFlash('danger', 'admin.danger.update', 'admin.payment', $Payment);
+			
+			return $this->redirectToReferer();
+		}
 		
-		/* Поиск */
-		$search = new SearchDTO();
-		$searchForm = $this->createForm(SearchForm::class, $search);
-		$searchForm->handleRequest($request);
-		
-		/* Получаем список */
-		$payments = $allPayments->fetchAllPaymentsAssociative($search);
-		
-		return $this->render(
-			[
-				'query' => $payments,
-				'search' => $searchForm->createView(),
-			]); 
+		return $this->render(['form' => $form->createView()]);
 	}
+	
 }
