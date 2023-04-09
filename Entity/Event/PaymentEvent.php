@@ -33,6 +33,7 @@ use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\Entity\Trans\PaymentTrans;
 use BaksDev\Payment\Type\Event\PaymentEventUid;
 use BaksDev\Payment\Type\Id\PaymentUid;
+use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
@@ -55,7 +56,7 @@ class PaymentEvent extends EntityEvent
 	
 	/** ID Payment */
 	#[ORM\Column(type: PaymentUid::TYPE, nullable: false)]
-	private ?PaymentUid $main = null;
+	private ?PaymentUid $payment = null;
 	
 	/** Обложка способа оплаты */
 	#[ORM\OneToOne(mappedBy: 'event', targetEntity: PaymentCover::class, cascade: ['all'])]
@@ -81,6 +82,11 @@ class PaymentEvent extends EntityEvent
 	#[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
 	private bool $active = true;
 	
+	/** Профиль пользователя, которому доступна оплата */
+	#[ORM\Column(type: TypeProfileUid::TYPE, nullable: true)]
+	private ?TypeProfileUid $type = null;
+	
+	
 	public function __construct()
 	{
 		$this->id = new PaymentEventUid();
@@ -104,15 +110,15 @@ class PaymentEvent extends EntityEvent
 	}
 	
 	
-	public function setMain(PaymentUid|Payment $main) : void
+	public function setMain(PaymentUid|Payment $payment) : void
 	{
-		$this->main = $main instanceof Payment ? $main->getId() : $main;
+		$this->payment = $payment instanceof Payment ? $payment->getId() : $payment;
 	}
 	
 	
 	public function getMain() : ?PaymentUid
 	{
-		return $this->main;
+		return $this->payment;
 	}
 	
 	

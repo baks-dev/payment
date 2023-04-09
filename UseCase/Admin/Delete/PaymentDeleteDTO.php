@@ -21,25 +21,38 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Payment\Entity\Cover;
+declare(strict_types=1);
 
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
+namespace BaksDev\Payment\UseCase\Admin\Delete;
+
+use BaksDev\Payment\Entity\Event\PaymentEventInterface;
 use BaksDev\Payment\Type\Event\PaymentEventUid;
+use Symfony\Component\Validator\Constraints as Assert;
 
-interface PaymentCoverInterface
+final class PaymentDeleteDTO implements PaymentEventInterface
 {
-	public function getName() : ?string;
+	
+	/** Идентификатор события */
+	#[Assert\Uuid]
+	private ?PaymentEventUid $id = null;
+	
+	#[Assert\Valid]
+	private Modify\ModifyDTO $modify;
+	
+	public function __construct() {
+		$this->modify = new Modify\ModifyDTO();
+	}
 	
 	
-	public function getExt() : ?string;
+	public function getEvent() : ?PaymentEventUid
+	{
+		return $this->id;
+	}
 	
 	
-	public function getCdn() : bool;
-	
-	
-	public function getDir() : ?PaymentEventUid;
-	
-	
-	
+	public function getModify() : Modify\ModifyDTO
+	{
+		return $this->modify;
+	}
 	
 }

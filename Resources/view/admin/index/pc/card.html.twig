@@ -13,20 +13,20 @@
 		{{ item.payment_sort }}
 	</td>
 	
+	
 	<td class="text-center">
 		{% if item.payment_active %}
-			<span class="badge bg-success">Активный</span>
+			<span class="badge text-bg-success">Активный</span>
 		{% else %}
-			<span class="badge bg-danger">Отключен</span>
+			<span class="badge text-bg-danger">Отключен</span>
 		{% endif %}
 	</td>
 	
 	<td class="w-100">
 		
-		
 		<div class="w-100 d-flex align-items-center gap-5">
 			
-			{# Превью  #}
+			{# Обложка  #}
 			
 			{% set img_path = item.payment_cover_cdn == true ? cdn_host : '' %}
 			{% set payment_cover_ext = item.payment_cover_cdn == true ? 'small.'~item.payment_cover_ext : item.payment_cover_ext %}
@@ -66,6 +66,17 @@
 	
 	</td>
 	
-	
+	<td class="text-center">
+		{% if item.type_profile_name %}
+			<span class="badge text-bg-warning">{{ item.type_profile_name }}</span>
+			
+			
+		{% else %}
+			<span class="badge text-bg-light">Доступно всем</span>
+			
+		{% endif %}
+		
+		
+	</td>
 
 </tr>

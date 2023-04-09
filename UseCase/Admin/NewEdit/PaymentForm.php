@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\UseCase\Admin\NewEdit;
 
+use BaksDev\Users\Profile\TypeProfile\Repository\TypeProfileChoice\TypeProfileChoiceInterface;
+use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -36,9 +39,34 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PaymentForm extends AbstractType
 {
+	private TypeProfileChoiceInterface $profileChoice;
+	
+	
+	public function __construct(TypeProfileChoiceInterface $profileChoice) {
+		$this->profileChoice = $profileChoice;
+	}
+	
 	
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
+		
+		$profileChoice = $this->profileChoice->getTypeProfileChoice();
+		
+		$builder
+			->add('type', ChoiceType::class, [
+				'choices' => $profileChoice,
+				'choice_value' => function(?TypeProfileUid $type) {
+					return $type?->getValue();
+				},
+				'choice_label' => function(TypeProfileUid $type) {
+					return $type->getOption();
+				},
+				'label' => false,
+				'expanded' => false,
+				'multiple' => false,
+				'required' => false
+			])
+		;
 		
 		/** Обложка способа оплаты */
 		$builder->add('cover', Cover\PaymentCoverForm::class);

@@ -27,8 +27,10 @@ namespace BaksDev\Payment\UseCase\Admin\NewEdit;
 
 use BaksDev\Files\Resources\Upload\Image\ImageUploadInterface;
 use BaksDev\Payment\Entity;
+use BaksDev\Payment\Messenger\PaymentMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PaymentHandler
@@ -41,24 +43,27 @@ final class PaymentHandler
 	
 	private ImageUploadInterface $imageUpload;
 	
+	private MessageBusInterface $bus;
+	
 	
 	public function __construct(
 		EntityManagerInterface $entityManager,
 		ValidatorInterface $validator,
 		LoggerInterface $logger,
 		ImageUploadInterface $imageUpload,
+		MessageBusInterface $bus
 	)
 	{
 		$this->entityManager = $entityManager;
 		$this->validator = $validator;
 		$this->logger = $logger;
 		$this->imageUpload = $imageUpload;
+		$this->bus = $bus;
 	}
 	
 	
 	public function handle(
 		PaymentDTO $command,
-		//?UploadedFile $cover = null
 	) : string|Entity\Payment
 	{
 		/* Валидация */
@@ -143,9 +148,10 @@ final class PaymentHandler
 		 * @var Cover\PaymentCoverDTO $Cover
 		 */
 		$Cover = $command->getCover();
+
 		if($Cover->file !== null)
 		{
-			$PaymentCover = $Event->getUploadCover();
+			$PaymentCover = $Cover->getEntityUpload();
 			$this->imageUpload->upload($Cover->file, $PaymentCover);
 		}
 		
@@ -153,6 +159,10 @@ final class PaymentHandler
 		/* присваиваем событие корню */
 		$Main->setEvent($Event);
 		$this->entityManager->flush();
+		
+		/* Отправляем собыие в шину  */
+		$this->bus->dispatch(new PaymentMessage($Main->getId(), $Main->getEvent(), $command->getEvent()));
+		
 		
 		return $Main;
 	}

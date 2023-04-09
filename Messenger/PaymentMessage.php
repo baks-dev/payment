@@ -21,25 +21,54 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Payment\Entity\Cover;
+declare(strict_types=1);
 
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
+namespace BaksDev\Payment\Messenger;
+
 use BaksDev\Payment\Type\Event\PaymentEventUid;
+use BaksDev\Payment\Type\Id\PaymentUid;
 
-interface PaymentCoverInterface
+
+final class PaymentMessage
 {
-	public function getName() : ?string;
+	/** Идентификатор */
+	private PaymentUid $id;
+	
+	/** Идентификатор события */
+	private PaymentEventUid $event;
+	
+	/** Идентификатор предыдущего события */
+	private ?PaymentEventUid $last;
+	
+	public function __construct(PaymentUid $id, PaymentEventUid $event, ?PaymentEventUid $last = null)
+	{
+		$this->last = $last;
+		$this->id = $id;
+		$this->event = $event;
+	}
 	
 	
-	public function getExt() : ?string;
+	/** Идентификатор */
+	
+	public function getId() : PaymentUid
+	{
+		return $this->id;
+	}
 	
 	
-	public function getCdn() : bool;
+	/** Идентификатор события */
+	
+	public function getEvent() : PaymentEventUid
+	{
+		return $this->event;
+	}
 	
 	
-	public function getDir() : ?PaymentEventUid;
+	/** Идентификатор предыдущего события */
 	
-	
-	
+	public function getLast() : ?PaymentEventUid
+	{
+		return $this->last;
+	}
 	
 }

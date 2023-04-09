@@ -21,25 +21,36 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Payment\Entity\Cover;
+declare(strict_types=1);
 
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
-use BaksDev\Payment\Type\Event\PaymentEventUid;
+namespace BaksDev\Payment\UseCase\Admin\Delete;
 
-interface PaymentCoverInterface
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+final class PaymentDeleteForm extends AbstractType
 {
-	public function getName() : ?string;
+	
+	public function buildForm(FormBuilderInterface $builder, array $options) : void
+	{
+		
+		/* Сохранить ******************************************************/
+		$builder->add(
+			'payment_delete',
+			SubmitType::class,
+			['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
+		);
+	}
 	
 	
-	public function getExt() : ?string;
-	
-	
-	public function getCdn() : bool;
-	
-	
-	public function getDir() : ?PaymentEventUid;
-	
-	
-	
+	public function configureOptions(OptionsResolver $resolver) : void
+	{
+		$resolver->setDefaults([
+			'data_class' => PaymentDeleteDTO::class,
+		]);
+	}
 	
 }

@@ -29,7 +29,7 @@
 			
 			{# Добавить #}
 			{% if is_granted(ROLE~'_NEW') or is_granted('ROLE_ADMIN') %}
-				<a href="{{ path('Payment:admin.newedit.new') }}" class="btn btn-danger fw-bolder">
+				<a href="{{ path('Payment:admin.newedit.new') }}" class="btn btn-primary fw-bolder" title='Добавить сопсоб оплаты'>
 					{{ 'btn.new'|trans({}, 'core.btn') }}
 				</a>
 			{% endif %}
@@ -52,6 +52,7 @@
 					<th scope="col">Сортировка</th>
 					<th scope="col" class="text-center">Статус</th>
 					<th scope="col">Способ приема платежей</th>
+					<th scope="col">Ограничение</th>
 				</tr>
 				</thead>
 				<tbody>

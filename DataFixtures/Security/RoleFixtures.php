@@ -26,7 +26,7 @@ namespace BaksDev\Payment\DataFixtures\Security;
 use BaksDev\Users\Groups\Group\DataFixtures\Security\Group\GroupFixtures;
 use BaksDev\Users\Groups\Group\Entity\Event\GroupEvent;
 use BaksDev\Users\Groups\Group\UseCase\Admin\NewEdit\CheckRoleHandler;
-use BaksDev\Orders\Order\DataFixtures\Security\Role\RoleDTO;
+use BaksDev\Payment\DataFixtures\Security\Role\RoleDTO;
 use BaksDev\Users\Groups\Role\Entity\Role;
 use BaksDev\Users\Groups\Role\UseCase\Admin\NewEdit\RoleHandler;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -55,7 +55,8 @@ final class RoleFixtures extends Fixture implements DependentFixtureInterface
         
         $RoleDTO = new RoleDTO();
         $RoleEvent = $manager->getRepository(Role::class)->find($RoleDTO->getRole());
-        
+	
+		
         if(empty($RoleEvent))
         {
             //if($RoleEvent) { $RoleDTO->setId($RoleEvent->getEvent()); }

@@ -58,7 +58,10 @@ final class PaymentCoverDTO implements PaymentCoverInterface
 	private ?PaymentEventUid $dir = null;
 	
 	
-	/* NAME */
+	/** Сущность для загрузки и обновления файла  */
+	
+	private mixed $entityUpload;
+	
 	
 	public function getName() : ?string
 	{
@@ -75,7 +78,7 @@ final class PaymentCoverDTO implements PaymentCoverInterface
 	
 	/* CDN */
 	
-	public function isCdn() : bool
+	public function getCdn() : bool
 	{
 		return $this->cdn;
 	}
@@ -86,6 +89,20 @@ final class PaymentCoverDTO implements PaymentCoverInterface
 	public function getDir() : ?PaymentEventUid
 	{
 		return $this->dir;
+	}
+	
+	
+	/** Сущность для загрузки и обновления файла  */
+	
+	public function getEntityUpload() : mixed
+	{
+		return $this->entityUpload;
+	}
+	
+	
+	public function setEntityUpload(mixed $entityUpload) : void
+	{
+		$this->entityUpload = $entityUpload;
 	}
 	
 }

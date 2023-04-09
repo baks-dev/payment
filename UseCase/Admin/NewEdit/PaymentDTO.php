@@ -28,6 +28,7 @@ namespace BaksDev\Payment\UseCase\Admin\NewEdit;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Payment\Entity\Event\PaymentEventInterface;
 use BaksDev\Payment\Type\Event\PaymentEventUid;
+use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,6 +38,9 @@ final class PaymentDTO implements PaymentEventInterface
 	/** Идентификатор события */
 	#[Assert\Uuid]
 	private ?PaymentEventUid $id = null;
+	
+	/** Профиль пользователя, которому доступна оплата (null - все) */
+	private ?TypeProfileUid $type = null;
 	
 	/** Обложка способа оплаты */
 	#[Assert\Valid]
@@ -177,5 +181,18 @@ final class PaymentDTO implements PaymentEventInterface
 	{
 		$this->active = $active;
 	}
+	
+	
+	/** Профиль пользователя, которому доступна оплата */
 
+	public function getType() : ?TypeProfileUid
+	{
+		return $this->type;
+	}
+	
+	public function setType(?TypeProfileUid $type) : void
+	{
+		$this->type = $type;
+	}
+	
 }

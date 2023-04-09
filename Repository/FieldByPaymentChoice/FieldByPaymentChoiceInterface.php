@@ -21,25 +21,12 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Payment\Entity\Cover;
+namespace BaksDev\Payment\Repository\FieldByPaymentChoice;
 
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
-use BaksDev\Payment\Type\Event\PaymentEventUid;
+use BaksDev\Payment\Type\Id\PaymentUid;
 
-interface PaymentCoverInterface
+interface FieldByPaymentChoiceInterface
 {
-	public function getName() : ?string;
-	
-	
-	public function getExt() : ?string;
-	
-	
-	public function getCdn() : bool;
-	
-	
-	public function getDir() : ?PaymentEventUid;
-	
-	
-	
+	public function fetchPaymentFields(PaymentUid $payment) : ?array;
 	
 }

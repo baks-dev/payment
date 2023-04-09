@@ -30,6 +30,7 @@ use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Core\Services\Switcher\SwitcherInterface;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Payment\Entity as PaymentEntity;
+use BaksDev\Users\Profile\TypeProfile\Entity as TypeProfileEntity;
 use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -103,6 +104,28 @@ final class AllPayments implements AllPaymentsInterface
 			'cover.event = event.id'
 		);
 		
+		/** Ограничение профилем */
+		
+		
+		$qb->leftJoin('event',
+			TypeProfileEntity\TypeProfile::TABLE,
+			'type_profile',
+			'event.type IS NOT NULL AND type_profile.id = event.type'
+		);
+		
+		$qb->leftJoin('type_profile',
+			TypeProfileEntity\Event\TypeProfileEvent::TABLE,
+			'type_profile_event',
+			'type_profile_event.id = type_profile.event'
+		);
+		
+		$qb->addSelect('type_profile_trans.name AS type_profile_name');
+		
+		$qb->leftJoin('type_profile_event',
+			TypeProfileEntity\Trans\TypeProfileTrans::TABLE,
+			'type_profile_trans',
+			'type_profile_trans.event = type_profile_event.id AND type_profile_trans.local = :local'
+		);
 		
 		
 		/* Поиск */

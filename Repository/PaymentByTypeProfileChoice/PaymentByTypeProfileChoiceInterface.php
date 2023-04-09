@@ -21,25 +21,13 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Payment\Entity\Cover;
+namespace BaksDev\Payment\Repository\PaymentByTypeProfileChoice;
 
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
-use BaksDev\Payment\Type\Event\PaymentEventUid;
+use BaksDev\Payment\Type\Id\PaymentUid;
+use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 
-interface PaymentCoverInterface
+interface PaymentByTypeProfileChoiceInterface
 {
-	public function getName() : ?string;
-	
-	
-	public function getExt() : ?string;
-	
-	
-	public function getCdn() : bool;
-	
-	
-	public function getDir() : ?PaymentEventUid;
-	
-	
-	
+	public function fetchPaymentByProfile(TypeProfileUid $type) : ?array;
 	
 }

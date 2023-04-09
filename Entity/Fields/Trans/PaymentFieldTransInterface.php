@@ -21,25 +21,15 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Payment\Entity\Cover;
+namespace BaksDev\Payment\Entity\Fields\Trans;
 
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
-use BaksDev\Payment\Type\Event\PaymentEventUid;
+use BaksDev\Core\Type\Locale\Locale;
 
-interface PaymentCoverInterface
+interface PaymentFieldTransInterface
 {
-	public function getName() : ?string;
+	public function getLocal() : Locale;
 	
 	
-	public function getExt() : ?string;
-	
-	
-	public function getCdn() : bool;
-	
-	
-	public function getDir() : ?PaymentEventUid;
-	
-	
-	
+	public function getName() : string;
 	
 }

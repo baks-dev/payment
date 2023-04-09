@@ -21,25 +21,39 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Payment\Entity\Cover;
+declare(strict_types=1);
 
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
-use BaksDev\Payment\Type\Event\PaymentEventUid;
+namespace BaksDev\Payment\Messenger;
 
-interface PaymentCoverInterface
+use Symfony\Component\Cache\Adapter\ApcuAdapter;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Exception\CacheException;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler]
+final class PaymentCacheClear
 {
-	public function getName() : ?string;
-	
-	
-	public function getExt() : ?string;
-	
-	
-	public function getCdn() : bool;
-	
-	
-	public function getDir() : ?PaymentEventUid;
-	
-	
-	
-	
+
+	public function __invoke(PaymentMessage $message)
+	{
+		/* Чистим кеш модуля */
+		$cache = new FilesystemAdapter('CachePayment');
+		$cache->clear();
+		
+		/* Сбрасываем индивидуальный кеш */
+		$cache = new ApcuAdapter('Payment');
+		$cache->clear();
+		
+		$cache = new ApcuAdapter((string) $message->getId()->getValue());
+		$cache->clear();
+		
+		$cache = new ApcuAdapter((string) $message->getEvent()->getValue());
+		$cache->clear();
+		
+		if($message->getLast())
+		{
+			$cache = new ApcuAdapter((string) $message->getLast()->getValue());
+			$cache->clear();
+		}
+	}
 }

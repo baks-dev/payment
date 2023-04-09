@@ -26,9 +26,70 @@ declare(strict_types=1);
 namespace BaksDev\Payment\Type\Field;
 
 use BaksDev\Core\Type\UidType\Uid;
+use Symfony\Component\Uid\AbstractUid;
 
 final class PaymentFieldUid extends Uid
 {
 	public const TYPE = 'payment_field_uid';
+	
+	/**
+	 * @var mixed|null
+	 */
+	private mixed $attr;
+	
+	/**
+	 * @var mixed|null
+	 */
+	private mixed $option;
+	
+	/**
+	 * @var mixed|null
+	 */
+	private mixed $type;
+	
+	private ?bool $required;
+	
+	
+	public function __construct(
+		AbstractUid|string|null $value = null,
+		mixed $attr = null,
+		mixed $option = null,
+		mixed $type = null,
+		?bool $required = true,
+	)
+	{
+		parent::__construct($value);
+		
+		$this->attr = $attr;
+		$this->option = $option;
+		$this->type = $type;
+		$this->required = $required;
+	}
+	
+	
+
+	public function getAttr() : mixed
+	{
+		return $this->attr;
+	}
+	
+
+	public function getOption() : mixed
+	{
+		return $this->option;
+	}
+	
+
+	public function getType() : mixed
+	{
+		return $this->type;
+	}
+	
+
+	public function getRequired() : ?bool
+	{
+		return $this->required;
+	}
+	
 	
 }
