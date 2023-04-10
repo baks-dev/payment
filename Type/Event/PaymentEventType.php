@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Payment\Type\Event;
 
 use BaksDev\Core\Type\UidType\UidType;
+use Doctrine\DBAL\Types\Types;
 
 final class PaymentEventType extends UidType
 {
@@ -37,7 +38,7 @@ final class PaymentEventType extends UidType
 	
 	public function getName() : string
 	{
-		return PaymentEventUid::TYPE;
+        return PaymentEventUid::TYPE;
 	}
 	
 }

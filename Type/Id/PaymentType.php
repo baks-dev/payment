@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Payment\Type\Id;
 
 use BaksDev\Core\Type\UidType\UidType;
+use Doctrine\DBAL\Types\Types;
 
 final class PaymentType extends UidType
 {
@@ -37,7 +38,7 @@ final class PaymentType extends UidType
 	
 	public function getName() : string
 	{
-		return PaymentUid::TYPE;
+        return PaymentUid::TYPE;
 	}
 	
 }
