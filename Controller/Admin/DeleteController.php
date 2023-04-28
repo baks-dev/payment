@@ -25,72 +25,61 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Controller\Admin;
 
-use BaksDev\Contacts\Region\Entity\ContactsRegion;
-use BaksDev\Contacts\Region\UseCase\Admin\NewEdit\ContactsRegionDTO;
-use BaksDev\Contacts\Region\UseCase\Admin\NewEdit\ContactsRegionForm;
-use BaksDev\Contacts\Region\UseCase\Admin\NewEdit\ContactsRegionHandler;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Services\Security\RoleSecurity;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryDTO;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryForm;
 use BaksDev\Payment\Entity;
 use BaksDev\Payment\UseCase\Admin\Delete\PaymentDeleteDTO;
 use BaksDev\Payment\UseCase\Admin\Delete\PaymentDeleteForm;
 use BaksDev\Payment\UseCase\Admin\Delete\PaymentDeleteHandler;
-use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentDTO;
-use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentForm;
-use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentHandler;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PAYMENT_DELETE'])]
+#[RoleSecurity('ROLE_PAYMENT_DELETE')]
 final class DeleteController extends AbstractController
 {
-	#[Route('/admin/payment/delete/{id}', name: 'admin.delete', methods: ['GET', 'POST'])]
-	public function delete(
-		Request $request,
-		#[MapEntity] Entity\Event\PaymentEvent $Event,
-		PaymentDeleteHandler $handler,
-	) : Response
-	{
-		
-		$PaymentDeleteDTO = new PaymentDeleteDTO();
-		$Event->getDto($PaymentDeleteDTO);
-		$form = $this->createForm(PaymentDeleteForm::class, $PaymentDeleteDTO, [
-			'action' => $this->generateUrl('Payment:admin.delete', ['id' => $PaymentDeleteDTO->getEvent()]),
-		]);
-		$form->handleRequest($request);
-		
-		if($form->isSubmitted() && $form->isValid() && $form->has('payment_delete'))
-		{
-			
-			$Payment = $handler->handle($PaymentDeleteDTO);
-			
-			if($Payment instanceof Entity\Payment)
-			{
-				$this->addFlash('admin.form.header.delete', 'admin.success.delete', 'admin.payment');
-				
-				return $this->redirectToRoute('Payment:admin.index');
-			}
-			
-			$this->addFlash(
-				'admin.form.header.delete',
-				'admin.danger.delete',
-				'admin.contacts.region',
-				$Payment
-			);
-			
-			return $this->redirectToRoute('Payment:admin.index', status: 400);
-		}
-		
-		return $this->render([
-			'form' => $form->createView(),
-			'name' => $Event->getNameByLocale($this->getLocale()), /*  название согласно локали  */
-		],
-			'content.html.twig'
-		);
-	}
-	
+    #[Route('/admin/payment/delete/{id}', name: 'admin.delete', methods: ['GET', 'POST'])]
+    public function delete(
+        Request $request,
+        #[MapEntity] Entity\Event\PaymentEvent $Event,
+        PaymentDeleteHandler $handler,
+    ): Response {
+        $PaymentDeleteDTO = new PaymentDeleteDTO();
+        $Event->getDto($PaymentDeleteDTO);
+
+        $form = $this->createForm(
+            PaymentDeleteForm::class,
+            $PaymentDeleteDTO,
+            ['action' => $this->generateUrl('Payment:admin.delete', ['id' => $PaymentDeleteDTO->getEvent()])]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && $form->has('payment_delete')) {
+            $Payment = $handler->handle($PaymentDeleteDTO);
+
+            if ($Payment instanceof Entity\Payment) {
+                $this->addFlash('admin.form.header.delete', 'admin.success.delete', 'admin.payment');
+
+                return $this->redirectToRoute('Payment:admin.index');
+            }
+
+            $this->addFlash(
+                'admin.form.header.delete',
+                'admin.danger.delete',
+                'admin.contacts.region',
+                $Payment
+            );
+
+            return $this->redirectToRoute('Payment:admin.index', status: 400);
+        }
+
+        return $this->render(
+            [
+                'form' => $form->createView(),
+                'name' => $Event->getNameByLocale($this->getLocale()), // название согласно локали
+            ],
+            'content.html.twig'
+        );
+    }
 }

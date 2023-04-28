@@ -27,8 +27,8 @@ namespace BaksDev\Payment\Controller\Admin;
 
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Services\Security\RoleSecurity;
-use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\Entity\Event\PaymentEvent;
+use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentDTO;
 use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentForm;
 use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentHandler;
@@ -37,45 +37,37 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PAYMENT_EDIT'])]
+#[RoleSecurity('ROLE_PAYMENT_EDIT')]
 final class EditController extends AbstractController
 {
-	#[Route('/admin/payment/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
-	public function edit(
-		Request $request,
-		#[MapEntity] PaymentEvent $Event,
-		PaymentHandler $paymentHandler,
-		
-	) : Response
-	{
+    #[Route('/admin/payment/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
+    public function edit(
+        Request $request,
+        #[MapEntity] PaymentEvent $Event,
+        PaymentHandler $paymentHandler,
+    ): Response
+    {
+        $PaymentDTO = new PaymentDTO();
+        $Event->getDto($PaymentDTO);
 
-		$PaymentDTO = new PaymentDTO();
-		$Event->getDto($PaymentDTO);
-		
-		/* Форма */
-		$form = $this->createForm(PaymentForm::class, $PaymentDTO);
-		$form->handleRequest($request);
-		
-		
-		if($form->isSubmitted() && $form->isValid() && $form->has('payment'))
-		{
-			
-			$Payment = $paymentHandler->handle($PaymentDTO);
-			
-			if($Payment instanceof Payment)
-			{
-				$this->addFlash('success', 'admin.success.update', 'admin.payment');
-				
-				return $this->redirectToRoute('Payment:admin.index');
-				
-			}
-			
-			$this->addFlash('danger', 'admin.danger.update', 'admin.payment', $Payment);
-			
-			return $this->redirectToReferer();
-		}
-		
-		return $this->render(['form' => $form->createView()]);
-	}
-	
+        // Форма
+        $form = $this->createForm(PaymentForm::class, $PaymentDTO);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && $form->has('payment')) {
+            $Payment = $paymentHandler->handle($PaymentDTO);
+
+            if ($Payment instanceof Payment) {
+                $this->addFlash('success', 'admin.success.update', 'admin.payment');
+
+                return $this->redirectToRoute('Payment:admin.index');
+            }
+
+            $this->addFlash('danger', 'admin.danger.update', 'admin.payment', $Payment);
+
+            return $this->redirectToReferer();
+        }
+
+        return $this->render(['form' => $form->createView()]);
+    }
 }
