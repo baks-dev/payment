@@ -1,0 +1,18 @@
+
+# Роль
+ROLE_PAYMENT:
+  name: 'Способы платеджей'
+  desc: 'Способы приема платежей'
+
+# Правила
+
+ROLE_PAYMENT_NEW:
+  name: 'Добавить'
+
+ROLE_PAYMENT_EDIT:
+  name: 'Редактировать'
+
+ROLE_PAYMENT_DELETE:
+  name: 'Удалить'
+
+

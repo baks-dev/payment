@@ -1,0 +1,13 @@
+ROLE_PAYMENT:
+  name: 'Payment methods'
+  desc: 'Methods of accepting payments'
+
+
+ROLE_PAYMENT_NEW:
+  name: 'Add'
+
+ROLE_PAYMENT_EDIT:
+  name: 'Edit'
+
+ROLE_PAYMENT_DELETE:
+  name: 'Delete'
