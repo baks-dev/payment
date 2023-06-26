@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Payment\Controller\Admin;
 
 use BaksDev\Core\Controller\AbstractController;
-use BaksDev\Core\Services\Security\RoleSecurity;
+use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Payment\Entity;
 use BaksDev\Payment\UseCase\Admin\Delete\PaymentDeleteDTO;
 use BaksDev\Payment\UseCase\Admin\Delete\PaymentDeleteForm;

@@ -18,25 +18,23 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use BaksDev\Orders\Order\Messenger\OrderMessage;
 use Symfony\Config\FrameworkConfig;
 
-return static function (ContainerConfigurator $configurator, FrameworkConfig $config)
-{
-    $services = $configurator->services()
-      ->defaults()
-      ->autowire()
-      ->autoconfigure()
+return static function (FrameworkConfig $framework) {
+
+    /** Транспорт заказов */
+    $messenger = $framework->messenger();
+
+    $messenger
+        ->transport('payment')
+        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
+        ->options(['queue_name' => 'payment_high'])
+        ->retryStrategy()
+        ->maxRetries(5)
+        ->delay(1000)
+        ->maxDelay(0)
+        ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
+        ->service(null)
     ;
-	
-	$namespace = 'BaksDev\Payment';
-	
-	/** Services */
-	
-	$services->load($namespace.'\Messenger\\', __DIR__.'/../../Messenger')
-		->exclude('../../Messenger/**/*Message.php')
-	;
-	
-	//$config->messenger()->routing(OrderMessage::class)->senders(['async_priority_high']);
-	
+
 };

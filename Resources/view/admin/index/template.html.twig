@@ -15,8 +15,5 @@
 {% block content %}
 	
 	{{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }}
-	<div style="display: none !important;"
-			class="popover popover-body popover-arrow fade show rounded-pill spinner-border spinner-border-sm vertical-middle d-none badge text-bg-success text-bg-warning text-bg-light">
-	</div>
 
 {% endblock %}

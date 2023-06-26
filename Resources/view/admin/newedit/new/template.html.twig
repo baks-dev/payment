@@ -25,10 +25,10 @@
 {% block javascript %}
 
 
-<script async data-src='/assets/js/image.input.min.js' class='lazy'></script>
-<script defer data-src="/assets/js/radio.input.min.js" class="lazy"></script>
-<script async data-src='/assets/plugins/nice-select2/nice-select2.min.js' class='lazy'></script>
-<script async data-src="/assets/payment/payment{{ app.environment != 'dev'?'.min' }}.js" class='lazy'></script>
+<script async data-src='/assets/js/image.input.min.js?v={{ version }}' class='lazy'></script>
+<script defer data-src="/assets/js/radio.input.min.js?v={{ version }}" class="lazy"></script>
+<script async data-src='/assets/plugins/nice-select2/nice-select2.min.js?v={{ version }}' class='lazy'></script>
+<script async data-src="/assets/payment/payment{{ app.environment != 'dev'?'.min' }}.js?v={{ version }}" class='lazy'></script>
 
 
 {% endblock %}

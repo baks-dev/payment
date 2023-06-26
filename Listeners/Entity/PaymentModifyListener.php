@@ -21,15 +21,17 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Payment\EntityListeners;
-
+namespace BaksDev\Payment\Listeners\Entity;
 
 use BaksDev\Core\Type\Ip\IpAddress;
 use BaksDev\Payment\Entity\Modify\PaymentModify;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: PaymentModify::class)]
 final class PaymentModifyListener
 {
     private RequestStack $request;

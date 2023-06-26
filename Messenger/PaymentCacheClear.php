@@ -27,7 +27,6 @@ namespace BaksDev\Payment\Messenger;
 
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Cache\Exception\CacheException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -37,7 +36,7 @@ final class PaymentCacheClear
 	public function __invoke(PaymentMessage $message)
 	{
 		/* Чистим кеш модуля */
-		$cache = new FilesystemAdapter('CachePayment');
+		$cache = new FilesystemAdapter('Payment');
 		$cache->clear();
 		
 		/* Сбрасываем индивидуальный кеш */
