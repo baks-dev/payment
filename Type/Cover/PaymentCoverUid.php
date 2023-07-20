@@ -31,6 +31,6 @@ final class PaymentCoverUid extends Uid
 {
     public const TEST = '0188a99b-3831-7c5d-afae-00866e35c1e0';
     
-	public const TYPE = 'payment_cover_uid';
+	public const TYPE = 'payment_cover';
 	
 }

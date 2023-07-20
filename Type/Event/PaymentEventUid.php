@@ -31,6 +31,6 @@ final class PaymentEventUid extends Uid
 {
     public const TEST = '0188a99b-6ead-7459-b9f6-3ca0f9b2f5bc';
     
-	public const TYPE = 'payment_event_uid';
+	public const TYPE = 'payment_event';
 	
 }

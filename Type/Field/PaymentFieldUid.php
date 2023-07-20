@@ -32,7 +32,7 @@ final class PaymentFieldUid extends Uid
 {
     public const TEST = '0188a99b-91bb-7c7a-8f5b-644682d65bc7';
     
-	public const TYPE = 'payment_field_uid';
+	public const TYPE = 'payment_field';
 	
 	/**
 	 * @var mixed|null
