@@ -34,6 +34,7 @@ final class PaymentDeleteDTO implements PaymentEventInterface
 	
 	/** Идентификатор события */
 	#[Assert\Uuid]
+	#[Assert\NotBlank]
 	private ?PaymentEventUid $id = null;
 	
 	#[Assert\Valid]

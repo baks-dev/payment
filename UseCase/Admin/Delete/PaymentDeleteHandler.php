@@ -53,11 +53,10 @@ final class PaymentDeleteHandler
 	
 	public function handle(
 		PaymentDeleteDTO $command,
-		//?UploadedFile $cover = null
 	) : string|Entity\Payment
 	{
 		
-		/* Валидация */
+		/* Валидация PaymentDeleteDTO */
 		$errors = $this->validator->validate($command);
 		
 		if(count($errors) > 0)
@@ -82,7 +81,9 @@ final class PaymentDeleteHandler
 		}
 		
 		
-		/** Получаем событие */
+		/**
+         * Получаем событие
+         */
 		$Event = $this->entityManager->getRepository(Entity\Event\PaymentEvent::class)->find(
 			$command->getEvent()
 		);
@@ -102,7 +103,9 @@ final class PaymentDeleteHandler
 		
 		
 		
-		/** Получаем корень агрегата */
+		/**
+         * Получаем корень агрегата
+         */
 		$Main = $this->entityManager->getRepository(Entity\Payment::class)->findOneBy(
 			['event' => $command->getEvent()]
 		);
@@ -121,7 +124,7 @@ final class PaymentDeleteHandler
 		}
 		
 		
-		/** Применяем зменения к событию */
+		/* Применяем изменения к событию */
 		$Event->setEntity($command);
 		$this->entityManager->persist($Event);
 		

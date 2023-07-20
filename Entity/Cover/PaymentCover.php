@@ -26,10 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Payment\Entity\Cover;
 
 use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Core\Entity\EntityState;
 use BaksDev\Files\Resources\Upload\UploadEntityInterface;
 use BaksDev\Payment\Entity\Event\PaymentEvent;
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
 use BaksDev\Payment\Type\Event\PaymentEventUid;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -134,5 +132,11 @@ class PaymentCover extends EntityEvent implements UploadEntityInterface
 	{
 		return $this->event->getId();
 	}
-	
+
+
+    public static function getDirName(): string
+    {
+        return PaymentEventUid::class;
+    }
+
 }
