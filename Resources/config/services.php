@@ -30,16 +30,11 @@ return static function (ContainerConfigurator $configurator) {
         ->autoconfigure()
     ;
 
-    $namespace = 'BaksDev\Payment';
+    $NAMESPACE = 'BaksDev\Payment\\';
 
-    $services->load($namespace.'\\', __DIR__.'/../../')
-        ->exclude(__DIR__.'/../../{Controller,Entity,Resources,Type,Tests,*DTO.php,*Message.php}');
+    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
 
-
-    $services->load($namespace.'\Controller\\', __DIR__.'/../../Controller')
-        ->tag('controller.service_arguments')
-        ->exclude(__DIR__.'/../../Controller/**/*Test.php')
-    ;
-
+    $services->load($NAMESPACE, $MODULE)
+        ->exclude($MODULE.'{Entity,Resources,Type,*DTO.php,*Message.php}');
 
 };

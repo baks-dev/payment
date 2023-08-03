@@ -20,10 +20,10 @@ namespace BaksDev\Payment\Controller\Admin\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group payment
- */
+/** @group payment */
+#[When(env: 'test')]
 final class NewControllerTest extends WebTestCase
 {
     private const URL = '/admin/payment/new';

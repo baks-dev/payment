@@ -23,10 +23,10 @@ use BaksDev\Payment\Type\Event\PaymentEventUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group payment
- */
+/** @group payment */
+#[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase
 {
     private const URL = '/admin/payment/delete/%s';

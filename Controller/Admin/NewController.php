@@ -33,8 +33,10 @@ use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentForm;
 use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[RoleSecurity('ROLE_PAYMENT_NEW')]
 final class NewController extends AbstractController
 {

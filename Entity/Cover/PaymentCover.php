@@ -133,6 +133,10 @@ class PaymentCover extends EntityEvent implements UploadEntityInterface
 		return $this->event->getId();
 	}
 
+    public function getDir(): PaymentEventUid
+    {
+        return $this->dir;
+    }
 
     public static function getDirName(): string
     {

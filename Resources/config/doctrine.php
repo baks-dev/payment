@@ -25,16 +25,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 
 
-use BaksDev\Contacts\Region\Type\Call\ContactsRegionCallType;
-use BaksDev\Contacts\Region\Type\Call\ContactsRegionCallUid;
-use BaksDev\Contacts\Region\Type\Call\Email\ContactRegionEmail;
-use BaksDev\Contacts\Region\Type\Call\Email\ContactRegionEmailType;
-use BaksDev\Contacts\Region\Type\Call\Gps\ContactRegionGps;
-use BaksDev\Contacts\Region\Type\Call\Gps\ContactRegionGpsType;
-use BaksDev\Contacts\Region\Type\Call\Phone\ContactsRegionCallPhoneType;
-use BaksDev\Contacts\Region\Type\Call\Phone\ContactsRegionCallPhoneUid;
-use BaksDev\Contacts\Region\Type\Event\ContactsRegionEventType;
-use BaksDev\Contacts\Region\Type\Event\ContactsRegionEventUid;
 use BaksDev\Contacts\Region\Type\Id\ContactsRegionType;
 use BaksDev\Contacts\Region\Type\Id\ContactsRegionUid;
 use BaksDev\Payment\Type\Cover\PaymentCoverType;
@@ -55,12 +45,13 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
 	$doctrine->dbal()->type(PaymentCoverUid::TYPE)->class(PaymentCoverType::class);
 
 
-	$emDefault = $doctrine->orm()->entityManager('default');
-	
-	$emDefault->autoMapping(true);
-	$emDefault->mapping('Payment')
+    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
+
+    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
+
+    $emDefault->mapping('Payment')
 		->type('attribute')
-		->dir(__DIR__.'/../../Entity')
+		->dir($MODULE.'Entity')
 		->isBundle(false)
 		->prefix('BaksDev\Payment\Entity')
 		->alias('Payment')

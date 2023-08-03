@@ -32,8 +32,10 @@ use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Payment\Repository\AllPayments\AllPaymentsInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[RoleSecurity('ROLE_PAYMENT')]
 final class IndexController extends AbstractController
 {

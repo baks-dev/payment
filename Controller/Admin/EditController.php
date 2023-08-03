@@ -35,8 +35,10 @@ use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentHandler;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[RoleSecurity('ROLE_PAYMENT_EDIT')]
 final class EditController extends AbstractController
 {

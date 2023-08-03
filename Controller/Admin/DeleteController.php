@@ -34,8 +34,10 @@ use BaksDev\Payment\UseCase\Admin\Delete\PaymentDeleteHandler;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[RoleSecurity('ROLE_PAYMENT_DELETE')]
 final class DeleteController extends AbstractController
 {
@@ -59,15 +61,15 @@ final class DeleteController extends AbstractController
             $Payment = $handler->handle($PaymentDeleteDTO);
 
             if ($Payment instanceof Entity\Payment) {
-                $this->addFlash('admin.form.header.delete', 'admin.success.delete', 'admin.payment');
+                $this->addFlash('admin.page.delete', 'admin.success.delete', 'admin.payment');
 
                 return $this->redirectToRoute('Payment:admin.index');
             }
 
             $this->addFlash(
-                'admin.form.header.delete',
+                'admin.page.delete',
                 'admin.danger.delete',
-                'admin.contacts.region',
+                'admin.payment',
                 $Payment
             );
 
@@ -78,8 +80,7 @@ final class DeleteController extends AbstractController
             [
                 'form' => $form->createView(),
                 'name' => $Event->getNameByLocale($this->getLocale()), // название согласно локали
-            ],
-            'content.html.twig'
+            ]
         );
     }
 }

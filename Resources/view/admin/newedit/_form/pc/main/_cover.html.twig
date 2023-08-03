@@ -4,12 +4,13 @@
 <div class="card-body text-center pt-0">
 	
 	{% set img_path = form.cover.vars.data.cdn is defined and form.cover.vars.data.cdn == true ? CDN_HOST : '' %}
+
 	
 	<label class="icon rounded-3 bg-contain lazy position-relative image-input"
 			style="width: 150px; height: 150px;"
 			
 			data-bg="{{ form.cover.vars.data.name is defined and form.cover.vars.data.name is not null ?
-			img_path ~ payment_cover ~ form.cover.vars.data.dir ~'/'~ form.cover.vars.data.name~'.'~form.cover.vars.data.ext  : '/assets/img/blank.svg' }}"
+			img_path ~ '/upload/' ~ constant('BaksDev\\Payment\\Entity\\Cover\\PaymentCover::TABLE') ~'/' ~ form.cover.vars.data.dir ~'/'~ form.cover.vars.data.name~'.'~form.cover.vars.data.ext  : '/assets/img/blank.svg' }}"
 	>
 		
 		<div class="position-absolute top-0 start-100 rounded-circle border p-2 ms-2 d-flex align-items-center justify-content-center"

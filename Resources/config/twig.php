@@ -23,22 +23,10 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use BaksDev\Payment\Entity\Cover\PaymentCover;
 use Symfony\Config\TwigConfig;
 
-return static function(TwigConfig $config, ContainerConfigurator $configurator)
-{
-	$config->path(__DIR__.'/../view', 'Payment');
-	
-	/** Абсолютный Путь для загрузки обложек способа оплаты */
-	$configurator->parameters()->set(
-		PaymentCover::TABLE,
-		'%kernel.project_dir%/public/upload/'.PaymentCover::TABLE.'/'
-	);
-	
-	/** Относительный путь обложек способа оплаты */
-	$config->global(PaymentCover::TABLE)->value('/upload/'.PaymentCover::TABLE.'/');
-	
+return static function(TwigConfig $config) {
+    $config->path(__DIR__.'/../view', 'Payment');
 };
 
 
