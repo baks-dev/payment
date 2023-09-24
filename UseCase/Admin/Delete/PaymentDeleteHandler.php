@@ -61,9 +61,10 @@ final class PaymentDeleteHandler
 		
 		if(count($errors) > 0)
 		{
-			$uniqid = uniqid('', false);
-			$errorsString = (string) $errors;
-			$this->logger->error($uniqid.': '.$errorsString);
+            /** Ошибка валидации */
+            $uniqid = uniqid('', false);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__LINE__ => __FILE__]);
+
 			return $uniqid;
 		}
 		

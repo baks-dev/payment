@@ -6,13 +6,20 @@ ROLE_PAYMENT:
 
 # Правила
 
+ROLE_PAYMENT_INDEX:
+  name: 'Просмотр'
+  desc: ''
+
 ROLE_PAYMENT_NEW:
   name: 'Добавить'
+  desc: ''
 
 ROLE_PAYMENT_EDIT:
   name: 'Редактировать'
+  desc: ''
 
 ROLE_PAYMENT_DELETE:
   name: 'Удалить'
+  desc: ''
 
 

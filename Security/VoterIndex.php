@@ -23,34 +23,27 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Payment\Messenger;
+namespace BaksDev\Payment\Security;
 
-use BaksDev\Core\Cache\AppCacheInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Users\Profile\Group\Security\VoterInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
+#[AutoconfigureTag('baks.security.voter')]
 
-#[AsMessageHandler(fromTransport: 'sync')]
-final class PaymentCacheClear
+class VoterIndex implements VoterInterface
 {
-    private AppCacheInterface $cache;
-    private LoggerInterface $messageDispatchLogger;
+    public const VOTER = 'INDEX';
 
-    public function __construct(
-        AppCacheInterface $cache,
-        LoggerInterface $messageDispatchLogger,
-    ) {
-        $this->cache = $cache;
-        $this->messageDispatchLogger = $messageDispatchLogger;
+    public static function getVoter(): string
+    {
+        return Role::ROLE.'_'.self::VOTER;
+    }
+
+    public function equals(RoleInterface $role): bool
+    {
+        return Role::ROLE === $role->getRole();
     }
 
 
-    public function __invoke(PaymentMessage $message)
-	{
-		/* Чистим кеш модуля */
-		$cache = $this->cache->init('Payment');
-		$cache->clear();
-
-        $this->messageDispatchLogger->info('Очистили кеш Payment', [__LINE__ => __FILE__]);
-	}
 }
