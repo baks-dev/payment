@@ -25,21 +25,27 @@
 	<td class="w-100">
 		
 		<div class="w-100 d-flex align-items-center gap-5">
-			
+
 			{# Обложка  #}
-			
-			{% set img_path = item.payment_cover_cdn == true ? CDN_HOST : '' %}
-			{% set payment_cover_ext = item.payment_cover_cdn == true ? 'small.'~item.payment_cover_ext : item.payment_cover_ext %}
-			
+			{% set image_path = '/assets/img/blank.svg' %}
+
+			{% if item.payment_cover_ext is defined and item.payment_cover_ext is not null %}
+				{% set img_host =  item.payment_cover_cdn == true  ? CDN_HOST : '' %}
+				{% set img_dir = item.payment_cover_name %}
+				{% set img_file = (img_host is empty ? '/image.' : '/small.') ~ item.payment_cover_ext %}
+				{% set image_path = img_host ~ img_dir ~ img_file %}
+			{% endif %}
+
+
 			{% if is_granted(ROLE~'_EDIT') or is_granted('ROLE_ADMIN') %}
 				<a href="{{ path('Payment:admin.newedit.edit', { id: item.event }) }}" class="pe-3">
 					<div class="rounded-3 bg-contain lazy p-1" style="width: 50px; height: 50px;"
-							data-bg="{{ item.payment_cover_name ? img_path ~ item.payment_cover_name ~ payment_cover_ext : '/assets/img/blank.svg' }}">
+							data-bg="{{ image_path }}">
 					</div>
 				</a>
 			{% else %}
 				<div class="rounded-3 bg-contain lazy p-1" style="width: 50px; height: 50px;"
-						data-bg="{{ item.payment_cover_name ? img_path ~ item.payment_cover_name ~ payment_cover_ext : '/assets/img/blank.svg' }}">
+						data-bg="{{ image_path }}">
 				</div>
 			{% endif %}
 			

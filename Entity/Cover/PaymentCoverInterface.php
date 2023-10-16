@@ -29,17 +29,11 @@ use BaksDev\Payment\Type\Event\PaymentEventUid;
 interface PaymentCoverInterface
 {
 	public function getName() : ?string;
-	
-	
+
+
 	public function getExt() : ?string;
-	
-	
+
+
 	public function getCdn() : bool;
-	
-	
-	public function getDir() : ?PaymentEventUid;
-	
-	
-	
-	
+
 }

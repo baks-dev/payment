@@ -32,6 +32,7 @@ use BaksDev\Payment\Type\Event\PaymentEventUid;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /* PaymentCover */
 
@@ -43,24 +44,29 @@ class PaymentCover extends EntityEvent implements UploadEntityInterface
 	public const TABLE = 'payment_cover';
 	
 	/** Связь на событие */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
 	#[ORM\Id]
 	#[ORM\OneToOne(inversedBy: 'cover', targetEntity: PaymentEvent::class)]
 	#[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
 	private PaymentEvent $event;
 	
-	/** Название директории по идентификатору события */
-	#[ORM\Column(type: PaymentEventUid::TYPE)]
-	private PaymentEventUid $dir;
-	
+
 	/** Название файла */
-	#[ORM\Column(type: Types::STRING, length: 100)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 100)]
+	#[ORM\Column(type: Types::STRING)]
 	private string $name;
 	
 	/** Расширение файла */
-	#[ORM\Column(type: Types::STRING, length: 64)]
+    #[Assert\NotBlank]
+    #[Assert\Choice(['png', 'gif', 'jpg', 'jpeg', 'webp'])]
+	#[ORM\Column(type: Types::STRING)]
 	private string $ext;
-	
-	/** Размер файла */
+
+    /** Размер файла */
+    #[Assert\NotBlank]
+    #[Assert\Range(max: 1048576)] // 1024 * 1024
 	#[ORM\Column(type: Types::INTEGER)]
 	private int $size = 0;
 	
@@ -69,11 +75,20 @@ class PaymentCover extends EntityEvent implements UploadEntityInterface
 	private bool $cdn = false;
 	
 	
-	public function __construct(PaymentEvent $event) { $this->event = $event; }
+	public function __construct(PaymentEvent $event)
+    {
+        $this->event = $event;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->event;
+    }
 	
-	
-	public function getDto($dto) : mixed
+	public function getDto($dto): mixed
 	{
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
 		if($dto instanceof PaymentCoverInterface)
 		{
 			return parent::getDto($dto);
@@ -83,7 +98,7 @@ class PaymentCover extends EntityEvent implements UploadEntityInterface
 	}
 	
 	
-	public function setEntity($dto) : mixed
+	public function setEntity($dto): mixed
 	{
 		/* Если размер файла нулевой - не заполняем сущность */
 		if(empty($dto->file) && empty($dto->getName()))
@@ -96,7 +111,7 @@ class PaymentCover extends EntityEvent implements UploadEntityInterface
 			$dto->setEntityUpload($this);
 		}
 		
-		if($dto instanceof PaymentCoverInterface)
+		if($dto instanceof PaymentCoverInterface || $dto instanceof self)
 		{
 			return parent::setEntity($dto);
 		}
@@ -110,14 +125,18 @@ class PaymentCover extends EntityEvent implements UploadEntityInterface
 		$this->name = $name;
 		$this->ext = $ext;
 		$this->size = $size;
-		$this->dir = $this->event->getId();
+		//$this->dir = $this->event->getId();
 		$this->cdn = false;
 	}
 	
 	
-	public function updCdn(string $ext) : void
+	public function updCdn(?string $ext = null) : void
 	{
-		$this->ext = $ext;
+		if($ext)
+        {
+            $this->ext = $ext;
+        }
+
 		$this->cdn = true;
 	}
 	
@@ -126,21 +145,31 @@ class PaymentCover extends EntityEvent implements UploadEntityInterface
 	{
 		return $this->event->getId();
 	}
-	
-	
-	public function getUploadDir() : object
-	{
-		return $this->event->getId();
-	}
 
-    public function getDir(): PaymentEventUid
+    /**
+     * Ext
+     */
+    public function getExt(): string
     {
-        return $this->dir;
+        return $this->ext;
     }
 
-    public static function getDirName(): string
-    {
-        return PaymentEventUid::class;
-    }
+
+	
+	
+//	public function getUploadDir() : object
+//	{
+//		return $this->event->getId();
+//	}
+//
+//    public function getDir(): PaymentEventUid
+//    {
+//        return $this->dir;
+//    }
+//
+//    public static function getDirName(): string
+//    {
+//        return PaymentEventUid::class;
+//    }
 
 }

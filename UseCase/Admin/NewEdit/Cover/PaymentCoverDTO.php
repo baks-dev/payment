@@ -26,26 +26,12 @@ declare(strict_types=1);
 namespace BaksDev\Payment\UseCase\Admin\NewEdit\Cover;
 
 use BaksDev\Payment\Entity\Cover\PaymentCoverInterface;
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
-use BaksDev\Payment\Type\Event\PaymentEventUid;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 
 final class PaymentCoverDTO implements PaymentCoverInterface
 {
 	
 	/** Файл изображения */
-	#[Assert\File(
-		maxSize: '1024k',
-		mimeTypes: [
-			'image/png',
-			'image/gif',
-			'image/jpeg',
-			'image/pjpeg',
-			'image/webp',
-		],
-		mimeTypesMessage: 'Please upload a valid file'
-	)]
 	public ?File $file = null;
 	
 	private ?string $name = null;
@@ -53,15 +39,7 @@ final class PaymentCoverDTO implements PaymentCoverInterface
 	private ?string $ext = null;
 	
 	private bool $cdn = false;
-	
-	#[Assert\Uuid]
-	private ?PaymentEventUid $dir = null;
-	
-	
-	/** Сущность для загрузки и обновления файла  */
-	
-	private mixed $entityUpload;
-	
+
 	
 	public function getName() : ?string
 	{
@@ -82,27 +60,6 @@ final class PaymentCoverDTO implements PaymentCoverInterface
 	{
 		return $this->cdn;
 	}
-	
-	
-	/* DIR */
-	
-	public function getDir() : ?PaymentEventUid
-	{
-		return $this->dir;
-	}
-	
-	
-	/** Сущность для загрузки и обновления файла  */
-	
-	public function getEntityUpload() : mixed
-	{
-		return $this->entityUpload;
-	}
-	
-	
-	public function setEntityUpload(mixed $entityUpload) : void
-	{
-		$this->entityUpload = $entityUpload;
-	}
+
 	
 }

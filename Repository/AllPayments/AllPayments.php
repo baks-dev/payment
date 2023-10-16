@@ -81,7 +81,7 @@ final class AllPayments implements AllPaymentsInterface
         $qb->addSelect("
 			CASE
 			   WHEN cover.name IS NOT NULL THEN
-					CONCAT ( '/upload/".PaymentEntity\Cover\PaymentCover::TABLE."' , '/', cover.dir, '/', cover.name, '.')
+					CONCAT ( '/upload/".PaymentEntity\Cover\PaymentCover::TABLE."' , '/', cover.name)
 			   ELSE NULL
 			END AS payment_cover_name
 		"

@@ -30,13 +30,13 @@ use Doctrine\DBAL\Types\Types;
 
 final class PaymentEventType extends UidType
 {
-	public function getClassType() : string
+	public function getClassType(): string
 	{
 		return PaymentEventUid::class;
 	}
 	
 	
-	public function getName() : string
+	public function getName(): string
 	{
         return PaymentEventUid::TYPE;
 	}

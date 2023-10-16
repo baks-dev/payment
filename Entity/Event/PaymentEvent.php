@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Entity\Event;
 
+use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Payment\Entity\Cover\PaymentCover;
 use BaksDev\Payment\Entity\Fields\PaymentField;
@@ -35,9 +36,8 @@ use BaksDev\Payment\Type\Event\PaymentEventUid;
 use BaksDev\Payment\Type\Id\PaymentUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-use BaksDev\Core\Entity\EntityEvent;
+use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
 /* PaymentEvent */
@@ -96,10 +96,10 @@ class PaymentEvent extends EntityEvent
 	
 	public function __clone()
 	{
-		$this->id = new PaymentEventUid();
+        $this->id = clone $this->id;
 	}
 	
-	public function __toString() : string
+	public function __toString(): string
 	{
 		return (string) $this->id;
 	}
@@ -122,8 +122,10 @@ class PaymentEvent extends EntityEvent
 	}
 	
 	
-	public function getDto($dto) : mixed
+	public function getDto($dto): mixed
 	{
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
 		if($dto instanceof PaymentEventInterface)
 		{
 			return parent::getDto($dto);
@@ -133,9 +135,9 @@ class PaymentEvent extends EntityEvent
 	}
 	
 	
-	public function setEntity($dto) : mixed
+	public function setEntity($dto): mixed
 	{
-		if($dto instanceof PaymentEventInterface)
+		if($dto instanceof PaymentEventInterface || $dto instanceof self)
 		{
 			return parent::setEntity($dto);
 		}

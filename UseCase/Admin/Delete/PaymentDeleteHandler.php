@@ -53,21 +53,21 @@ final class PaymentDeleteHandler
 	
 	public function handle(
 		PaymentDeleteDTO $command,
-	) : string|Entity\Payment
+	): string|Entity\Payment
 	{
 		
-		/* Валидация PaymentDeleteDTO */
+		/* Валидация DTO */
 		$errors = $this->validator->validate($command);
 		
 		if(count($errors) > 0)
 		{
             /** Ошибка валидации */
             $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__LINE__ => __FILE__]);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
 
 			return $uniqid;
 		}
-		
+
 		/* Обязательно передается идентификатор события */
 		if($command->getEvent() === null)
 		{
@@ -101,9 +101,14 @@ final class PaymentDeleteHandler
 			
 			return $uniqid;
 		}
-		
-		
-		
+
+
+        /* Применяем изменения к событию */
+        $Event->setEntity($command);
+        $this->entityManager->persist($Event);
+
+
+
 		/**
          * Получаем корень агрегата
          */
@@ -123,11 +128,23 @@ final class PaymentDeleteHandler
 			
 			return $uniqid;
 		}
-		
-		
-		/* Применяем изменения к событию */
-		$Event->setEntity($command);
-		$this->entityManager->persist($Event);
+
+
+        /**
+         * Валидация Event
+         */
+
+        $errors = $this->validator->validate($Event);
+
+        if(count($errors) > 0)
+        {
+            /** Ошибка валидации */
+            $uniqid = uniqid('', false);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+
+            return $uniqid;
+        }
+
 		
 		/* Удаляем корень агрегата */
 		$this->entityManager->remove($Main);

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Type\Id;
 
+use App\Kernel;
 use BaksDev\Core\Type\UidType\Uid;
 use Symfony\Component\Uid\AbstractUid;
 
@@ -51,17 +52,18 @@ final class PaymentUid extends Uid
 		mixed $attr = null,
 	)
 	{
-		parent::__construct($value);
+        parent::__construct($value);
+
 		$this->option = $option;
 		$this->attr = $attr;
 	}
 
-	public function getOption() : mixed
+	public function getOption(): mixed
 	{
 		return $this->option;
 	}
 
-	public function getAttr() : mixed
+	public function getAttr(): mixed
 	{
 		return $this->attr;
 	}

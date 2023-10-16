@@ -27,7 +27,8 @@ namespace BaksDev\Payment\UseCase\Admin\NewEdit;
 
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Files\Resources\Upload\Image\ImageUploadInterface;
-use BaksDev\Payment\Entity;
+use BaksDev\Payment\Entity\Event\PaymentEvent;
+use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\Messenger\PaymentMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -51,7 +52,8 @@ final class PaymentHandler
         LoggerInterface $logger,
         ImageUploadInterface $imageUpload,
         MessageDispatchInterface $messageDispatch,
-    ) {
+    )
+    {
         $this->entityManager = $entityManager;
         $this->validator = $validator;
         $this->logger = $logger;
@@ -59,33 +61,32 @@ final class PaymentHandler
         $this->messageDispatch = $messageDispatch;
     }
 
-    public function handle(
-        PaymentDTO $command,
-    ): string|Entity\Payment {
-        /* Валидация */
+    public function handle(PaymentDTO $command,): string|Payment
+    {
+        /* Валидация DTO */
         $errors = $this->validator->validate($command);
 
-        if (count($errors) > 0)
+        if(count($errors) > 0)
         {
             /** Ошибка валидации */
             $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__LINE__ => __FILE__]);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
 
             return $uniqid;
         }
 
-        if ($command->getEvent())
+        if($command->getEvent())
         {
-            $EventRepo = $this->entityManager->getRepository(Entity\Event\PaymentEvent::class)->find(
+            $EventRepo = $this->entityManager->getRepository(PaymentEvent::class)->find(
                 $command->getEvent()
             );
 
-            if ($EventRepo === null)
+            if($EventRepo === null)
             {
                 $uniqid = uniqid('', false);
                 $errorsString = sprintf(
                     'Not found %s by id: %s',
-                    Entity\Event\PaymentEvent::class,
+                    PaymentEvent::class,
                     $command->getEvent()
                 );
                 $this->logger->error($uniqid.': '.$errorsString);
@@ -93,43 +94,47 @@ final class PaymentHandler
                 return $uniqid;
             }
 
+            $EventRepo->setEntity($command);
+            $EventRepo->setEntityManager($this->entityManager);
             $Event = $EventRepo->cloneEntity();
-        } else
+        }
+        else
         {
-            $Event = new Entity\Event\PaymentEvent();
+            $Event = new PaymentEvent();
+            $Event->setEntity($command);
             $this->entityManager->persist($Event);
         }
 
-        $this->entityManager->clear();
+        //        $this->entityManager->clear();
+        //        $this->entityManager->persist($Event);
 
-        /* @var Entity\Payment $Main */
-        if ($Event->getMain())
+
+        /* @var Payment $Main */
+        if($Event->getMain())
         {
-            $Main = $this->entityManager->getRepository(Entity\Payment::class)->findOneBy(
-                ['event' => $command->getEvent()]
-            );
+            $Main = $this->entityManager->getRepository(Payment::class)
+                ->findOneBy(['event' => $command->getEvent()]);
 
-            if (empty($Main))
+            if(empty($Main))
             {
                 $uniqid = uniqid('', false);
                 $errorsString = sprintf(
                     'Not found %s by event: %s',
-                    Entity\Payment::class,
+                    Payment::class,
                     $command->getEvent()
                 );
                 $this->logger->error($uniqid.': '.$errorsString);
 
                 return $uniqid;
             }
-        } else
+        }
+        else
         {
-            $Main = new Entity\Payment();
+            $Main = new Payment();
             $this->entityManager->persist($Main);
             $Event->setMain($Main);
         }
 
-        $Event->setEntity($command);
-        $this->entityManager->persist($Event);
 
         /** Загружаем файл обложки.
          *
@@ -137,7 +142,7 @@ final class PaymentHandler
          */
         $Cover = $command->getCover();
 
-        if ($Cover->file !== null)
+        if($Cover->file !== null)
         {
             $PaymentCover = $Cover->getEntityUpload();
             $this->imageUpload->upload($Cover->file, $PaymentCover);
@@ -145,6 +150,24 @@ final class PaymentHandler
 
         /* присваиваем событие корню */
         $Main->setEvent($Event);
+
+
+        /**
+         * Валидация Event
+         */
+
+        $errors = $this->validator->validate($Event);
+
+        if(count($errors) > 0)
+        {
+            /** Ошибка валидации */
+            $uniqid = uniqid('', false);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+
+            return $uniqid;
+        }
+
+
         $this->entityManager->flush();
 
 

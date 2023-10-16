@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Entity\Fields\Trans;
 
+use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Payment\Entity\Fields\PaymentField;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-use BaksDev\Core\Entity\EntityEvent;
+use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
 /* Перевод PaymentFieldTrans */
@@ -66,10 +66,16 @@ class PaymentFieldTrans extends EntityEvent
 	{
 		$this->field = $field;
 	}
+
+    public function __toString(): string
+    {
+        return (string) $this->field;
+    }
 	
-	
-	public function getDto($dto) : mixed
+	public function getDto($dto): mixed
 	{
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
 		if($dto instanceof PaymentFieldTransInterface)
 		{
 			return parent::getDto($dto);
@@ -79,10 +85,10 @@ class PaymentFieldTrans extends EntityEvent
 	}
 	
 	
-	public function setEntity($dto) : mixed
+	public function setEntity($dto): mixed
 	{
 		
-		if($dto instanceof PaymentFieldTransInterface)
+		if($dto instanceof PaymentFieldTransInterface || $dto instanceof self)
 		{
 			return parent::setEntity($dto);
 		}

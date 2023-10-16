@@ -54,6 +54,11 @@ class Payment
 	{
 		$this->id = new PaymentUid();
 	}
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
 	
 	
 	public function getId() : PaymentUid

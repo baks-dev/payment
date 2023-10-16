@@ -25,15 +25,14 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Entity\Fields;
 
+use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Core\Type\Field\InputField;
 use BaksDev\Payment\Entity\Event\PaymentEvent;
 use BaksDev\Payment\Entity\Fields\Trans\PaymentFieldTrans;
 use BaksDev\Payment\Type\Field\PaymentFieldUid;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Core\Entity\EntityState;
+use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
 /* Перевод PaymentField */
@@ -82,12 +81,18 @@ class PaymentField extends EntityEvent
 	
 	public function __clone() : void
 	{
-		$this->id = new PaymentFieldUid();
+        $this->id = clone $this->id;
 	}
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
 	
-	
-	public function getDto($dto) : mixed
+	public function getDto($dto): mixed
 	{
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
 		if($dto instanceof PaymentFieldInterface)
 		{
 			return parent::getDto($dto);
@@ -97,10 +102,10 @@ class PaymentField extends EntityEvent
 	}
 	
 	
-	public function setEntity($dto) : mixed
+	public function setEntity($dto): mixed
 	{
 		
-		if($dto instanceof PaymentFieldInterface)
+		if($dto instanceof PaymentFieldInterface || $dto instanceof self)
 		{
 			return parent::setEntity($dto);
 		}

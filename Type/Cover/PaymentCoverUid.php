@@ -25,12 +25,14 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Type\Cover;
 
+use App\Kernel;
 use BaksDev\Core\Type\UidType\Uid;
+use Symfony\Component\Uid\AbstractUid;
 
 final class PaymentCoverUid extends Uid
 {
     public const TEST = '0188a99b-3831-7c5d-afae-00866e35c1e0';
     
 	public const TYPE = 'payment_cover';
-	
+
 }

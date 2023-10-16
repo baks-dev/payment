@@ -2,15 +2,22 @@
 
 
 <div class="card-body text-center pt-0">
-	
-	{% set img_path = form.cover.vars.data.cdn is defined and form.cover.vars.data.cdn == true ? CDN_HOST : '' %}
 
-	
+	{# Обложка  #}
+	{% set image_path = '/assets/img/blank.svg' %}
+
+	{% if form.cover.vars.data.ext is defined and form.cover.vars.data.ext is not null %}
+		{% set img_host =  form.cover.vars.data.cdn == true  ? CDN_HOST : '' %}
+		{% set img_table = '/upload/' ~ constant('BaksDev\\Payment\\Entity\\Cover\\PaymentCover::TABLE') %}
+		{% set img_dir = form.cover.vars.data.name %}
+		{% set img_file = (img_host is empty ? '/image.' : '/small.') ~ form.cover.vars.data.ext %}
+		{% set image_path = img_host ~ img_table ~ img_dir ~ img_file %}
+	{% endif %}
+
+
 	<label class="icon rounded-3 bg-contain lazy position-relative image-input"
 			style="width: 150px; height: 150px;"
-			
-			data-bg="{{ form.cover.vars.data.name is defined and form.cover.vars.data.name is not null ?
-			img_path ~ '/upload/' ~ constant('BaksDev\\Payment\\Entity\\Cover\\PaymentCover::TABLE') ~'/' ~ form.cover.vars.data.dir ~'/'~ form.cover.vars.data.name~'.'~form.cover.vars.data.ext  : '/assets/img/blank.svg' }}"
+			data-bg="{{ image_path }}"
 	>
 		
 		<div class="position-absolute top-0 start-100 rounded-circle border p-2 ms-2 d-flex align-items-center justify-content-center"

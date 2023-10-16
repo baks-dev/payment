@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 
-#[AsMessageHandler(fromTransport: 'sync')]
+#[AsMessageHandler]
 final class PaymentCacheClear
 {
     private AppCacheInterface $cache;
@@ -51,6 +51,6 @@ final class PaymentCacheClear
 		$cache = $this->cache->init('Payment');
 		$cache->clear();
 
-        $this->messageDispatchLogger->info('Очистили кеш Payment', [__LINE__ => __FILE__]);
+        $this->messageDispatchLogger->info('Очистили кеш Payment', [__FILE__.':'.__LINE__]);
 	}
 }

@@ -25,12 +25,14 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Type\Event;
 
+use App\Kernel;
 use BaksDev\Core\Type\UidType\Uid;
+use Symfony\Component\Uid\AbstractUid;
 
 final class PaymentEventUid extends Uid
 {
     public const TEST = '0188a99b-6ead-7459-b9f6-3ca0f9b2f5bc';
     
 	public const TYPE = 'payment_event';
-	
+
 }

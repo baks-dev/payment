@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Payment\UseCase\Admin\NewEdit\Trans;
 
 use BaksDev\Payment\Entity\Trans\PaymentTransInterface;
+use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
 use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -59,7 +60,7 @@ final class PaymentTransDTO implements PaymentTransInterface
 	
 	public function setLocal(Locale $local) : void
 	{
-		if(!(new \ReflectionProperty($this::class, 'local'))->isInitialized($this))
+		if(!(new ReflectionProperty(self::class, 'local'))->isInitialized($this))
 		{
 			$this->local = $local;
 		}
@@ -68,7 +69,7 @@ final class PaymentTransDTO implements PaymentTransInterface
 	
 	/** Название продукта  */
 	
-	public function getName() : string
+	public function getName(): string
 	{
 		return $this->name;
 	}

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Type\Field;
 
+use App\Kernel;
 use BaksDev\Core\Type\UidType\Uid;
 use Symfony\Component\Uid\AbstractUid;
 
@@ -60,7 +61,7 @@ final class PaymentFieldUid extends Uid
 		?bool $required = true,
 	)
 	{
-		parent::__construct($value);
+        parent::__construct($value);
 		
 		$this->attr = $attr;
 		$this->option = $option;
@@ -70,19 +71,19 @@ final class PaymentFieldUid extends Uid
 	
 	
 
-	public function getAttr() : mixed
+	public function getAttr(): mixed
 	{
 		return $this->attr;
 	}
 	
 
-	public function getOption() : mixed
+	public function getOption(): mixed
 	{
 		return $this->option;
 	}
 	
 
-	public function getType() : mixed
+	public function getType(): mixed
 	{
 		return $this->type;
 	}
