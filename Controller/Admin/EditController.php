@@ -62,7 +62,7 @@ final class EditController extends AbstractController
             if ($Payment instanceof Payment) {
                 $this->addFlash('success', 'admin.success.update', 'admin.payment');
 
-                return $this->redirectToRoute('Payment:admin.index');
+                return $this->redirectToRoute('payment:admin.index');
             }
 
             $this->addFlash('danger', 'admin.danger.update', 'admin.payment', $Payment);

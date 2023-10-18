@@ -57,7 +57,7 @@ final class NewController extends AbstractController
             if ($Payment instanceof Payment) {
                 $this->addFlash('success', 'admin.success.new', 'admin.payment');
 
-                return $this->redirectToRoute('Payment:admin.index');
+                return $this->redirectToRoute('payment:admin.index');
             }
 
             $this->addFlash('danger', 'admin.danger.new', 'admin.payment', $Payment);

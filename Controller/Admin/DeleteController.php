@@ -53,7 +53,7 @@ final class DeleteController extends AbstractController
         $form = $this->createForm(
             PaymentDeleteForm::class,
             $PaymentDeleteDTO,
-            ['action' => $this->generateUrl('Payment:admin.delete', ['id' => $PaymentDeleteDTO->getEvent()])]
+            ['action' => $this->generateUrl('payment:admin.delete', ['id' => $PaymentDeleteDTO->getEvent()])]
         );
         $form->handleRequest($request);
 
@@ -63,7 +63,7 @@ final class DeleteController extends AbstractController
             if ($Payment instanceof Entity\Payment) {
                 $this->addFlash('admin.page.delete', 'admin.success.delete', 'admin.payment');
 
-                return $this->redirectToRoute('Payment:admin.index');
+                return $this->redirectToRoute('payment:admin.index');
             }
 
             $this->addFlash(
@@ -73,7 +73,7 @@ final class DeleteController extends AbstractController
                 $Payment
             );
 
-            return $this->redirectToRoute('Payment:admin.index', status: 400);
+            return $this->redirectToRoute('payment:admin.index', status: 400);
         }
 
         return $this->render(

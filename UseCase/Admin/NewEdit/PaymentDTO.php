@@ -100,6 +100,11 @@ final class PaymentDTO implements PaymentEventInterface
 	
 	public function addTranslate(Trans\PaymentTransDTO $trans) : void
 	{
+        if(empty($trans->getLocal()->getLocalValue()))
+        {
+            return;
+        }
+
 		if(!$this->translate->contains($trans))
 		{
 			$this->translate->add($trans);

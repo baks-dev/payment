@@ -49,11 +49,11 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
 
     $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
 
-    $emDefault->mapping('Payment')
+    $emDefault->mapping('payment')
 		->type('attribute')
 		->dir($MODULE.'Entity')
 		->isBundle(false)
 		->prefix('BaksDev\Payment\Entity')
-		->alias('Payment')
+		->alias('payment')
 	;
 };
