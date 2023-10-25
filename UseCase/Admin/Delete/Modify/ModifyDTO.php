@@ -18,9 +18,11 @@
 
 namespace BaksDev\Payment\UseCase\Admin\Delete\Modify;
 
+use BaksDev\Core\Type\Modify\Modify\ModifyActionDelete;
 use BaksDev\Payment\Entity\Modify\PaymentModifyInterface;
 use BaksDev\Core\Type\Modify\ModifyAction;
-use BaksDev\Core\Type\Modify\ModifyActionEnum;
+use BaksDev\Core\Type\Modify\Modify\ModifyActionNew;
+use BaksDev\Core\Type\Modify\Modify\ModifyActionUpdate;
 
 final class ModifyDTO implements PaymentModifyInterface
 {
@@ -30,7 +32,7 @@ final class ModifyDTO implements PaymentModifyInterface
 	
 	public function __construct()
 	{
-		$this->action = new ModifyAction(ModifyActionEnum::DELETE);
+		$this->action = new ModifyAction(ModifyActionDelete::class);
 	}
 
 	public function getAction() : ModifyAction
