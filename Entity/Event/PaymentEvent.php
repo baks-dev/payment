@@ -145,17 +145,6 @@ class PaymentEvent extends EntityEvent
 		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
 	}
 	
-	
-//	public function isModifyActionEquals(ModifyActionEnum $action) : bool
-//	{
-//		return $this->modify->equals($action);
-//	}
-	
-	//	public function getUploadClass() : PaymentImage
-	//	{
-	//		return $this->image ?: $this->image = new PaymentImage($this);
-	//	}
-	
 	public function getNameByLocale(Locale $locale) : ?string
 	{
 		$name = null;
