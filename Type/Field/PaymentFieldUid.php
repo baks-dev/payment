@@ -50,7 +50,7 @@ final class PaymentFieldUid extends Uid
 	 */
 	private mixed $type;
 	
-	private ?bool $required;
+	private bool $required = true;
 	
 	
 	public function __construct(
@@ -58,7 +58,7 @@ final class PaymentFieldUid extends Uid
 		mixed $attr = null,
 		mixed $option = null,
 		mixed $type = null,
-		?bool $required = true,
+		bool $required = true,
 	)
 	{
         parent::__construct($value);
@@ -89,7 +89,7 @@ final class PaymentFieldUid extends Uid
 	}
 	
 
-	public function getRequired() : ?bool
+	public function getRequired() : bool
 	{
 		return $this->required;
 	}
