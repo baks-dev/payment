@@ -50,7 +50,7 @@ final class PaymentForm extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
 		
-		$profileChoice = $this->profileChoice->getTypeProfileChoice();
+		$profileChoice = $this->profileChoice->getActiveTypeProfileChoice();
 		
 		$builder
 			->add('type', ChoiceType::class, [
