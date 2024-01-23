@@ -39,8 +39,13 @@ final class EditControllerTest extends WebTestCase
     public static function setUpBeforeClass(): void
     {
         // Получаем одно из событий Продукта
+        /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get(EntityManagerInterface::class);
         self::$identifier = $em->getRepository(Payment::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
+
+        $em->clear();
+        //$em->close();
+
     }
 
 
