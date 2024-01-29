@@ -29,6 +29,7 @@ use BaksDev\Core\Cache\AppCacheInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 final class PaymentDispatch
 {
     public function __invoke(PaymentMessage $message): void {}
