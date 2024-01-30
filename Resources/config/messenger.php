@@ -28,12 +28,17 @@ return static function (FrameworkConfig $framework) {
         ->transport('payment')
         ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
         ->options(['queue_name' => 'payment'])
+        ->failureTransport('failed-payment')
         ->retryStrategy()
         ->maxRetries(3)
         ->delay(1000)
         ->maxDelay(0)
         ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
         ->service(null)
+
     ;
+
+    $messenger->transport('failed-payment')
+        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%');
 
 };
