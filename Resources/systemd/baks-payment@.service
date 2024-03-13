@@ -1,10 +1,21 @@
+# bash
+
+# systemctl daemon-reload
+
+# systemctl enable baks-payment@1.service
+# systemctl disable baks-payment@1.service
+
+# systemctl start baks-payment@1.service
+# systemctl restart baks-payment@1.service
+# systemctl stop baks-payment@1.service
+
 [Unit]
 Description=Symfony messenger payment %i
 StartLimitBurst=5
 StartLimitIntervalSec=0
 
 [Service]
-ExecStart=php /.....path..../bin/console messenger:consume payment --memory-limit=128m --time-limit=3600 --limit=100
+ExecStart=php /.....PATH_TO_PROJECT..../bin/console messenger:consume payment --memory-limit=128m --time-limit=3600 --limit=100
 Restart=always
 
 User=unit
