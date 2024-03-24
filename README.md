@@ -1,6 +1,6 @@
 # BaksDev Payment
 
-[![Version](https://img.shields.io/badge/version-7.0.14-blue)](https://github.com/baks-dev/payment/releases)
+[![Version](https://img.shields.io/badge/version-7.0.15-blue)](https://github.com/baks-dev/payment/releases)
 ![php 8.2+](https://img.shields.io/badge/php-min%208.1-red.svg)
 
 Модуль способов оплаты
