@@ -33,7 +33,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use BaksDev\Payment\Entity as PaymentEntity;
 
-final class FieldByPaymentChoice implements FieldByPaymentChoiceInterface
+final class FieldByPaymentChoiceRepository implements FieldByPaymentChoiceInterface
 {
 	private EntityManagerInterface $entityManager;
 	

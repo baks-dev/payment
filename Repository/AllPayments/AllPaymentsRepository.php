@@ -31,7 +31,7 @@ use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Payment\Entity as PaymentEntity;
 use BaksDev\Users\Profile\TypeProfile\Entity as TypeProfileEntity;
 
-final class AllPayments implements AllPaymentsInterface
+final class AllPaymentsRepository implements AllPaymentsInterface
 {
     private PaginatorInterface $paginator;
 

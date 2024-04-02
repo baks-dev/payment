@@ -56,7 +56,7 @@ class PaymentField extends EntityEvent
 	private PaymentEvent $event;
 	
 	/** Перевод полей для заполнения */
-	#[ORM\OneToMany(mappedBy: 'field', targetEntity: PaymentFieldTrans::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: PaymentFieldTrans::class, mappedBy: 'field', cascade: ['all'])]
 	private Collection $translate;
 	
 	/** Тип поля (input, select, textarea ....)  */

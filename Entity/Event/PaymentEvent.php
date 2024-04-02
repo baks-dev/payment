@@ -59,19 +59,19 @@ class PaymentEvent extends EntityEvent
 	private ?PaymentUid $payment = null;
 	
 	/** Обложка способа оплаты */
-	#[ORM\OneToOne(mappedBy: 'event', targetEntity: PaymentCover::class, cascade: ['all'])]
+	#[ORM\OneToOne(targetEntity: PaymentCover::class, mappedBy: 'event', cascade: ['all'])]
 	private ?PaymentCover $cover = null;
 	
 	/** Модификатор */
-	#[ORM\OneToOne(mappedBy: 'event', targetEntity: PaymentModify::class, cascade: ['all'])]
+	#[ORM\OneToOne(targetEntity: PaymentModify::class, mappedBy: 'event', cascade: ['all'])]
 	private PaymentModify $modify;
 	
 	/** Перевод */
-	#[ORM\OneToMany(mappedBy: 'event', targetEntity: PaymentTrans::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: PaymentTrans::class, mappedBy: 'event', cascade: ['all'])]
 	private Collection $translate;
 	
 	/** Перевод */
-	#[ORM\OneToMany(mappedBy: 'event', targetEntity: PaymentField::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: PaymentField::class, mappedBy: 'event', cascade: ['all'])]
 	private Collection $field;
 	
 	/** Сортировка */

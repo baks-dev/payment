@@ -32,7 +32,7 @@ use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class PaymentByTypeProfileChoice implements PaymentByTypeProfileChoiceInterface
+final class PaymentByTypeProfileChoiceRepository implements PaymentByTypeProfileChoiceInterface
 {
     private EntityManagerInterface $entityManager;
 
