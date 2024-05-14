@@ -26,15 +26,6 @@ declare(strict_types=1);
 namespace BaksDev\Payment\Commands\Upgrade;
 
 
-use BaksDev\Core\Type\Field\InputField;
-use BaksDev\Delivery\Entity\Delivery;
-use BaksDev\Delivery\Repository\ExistTypeDelivery\ExistTypeDeliveryInterface;
-use BaksDev\Delivery\Type\Id\DeliveryUid;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryDTO;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryHandler;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\Fields\DeliveryFieldDTO;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\Fields\Trans\DeliveryFieldTransDTO;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\Trans\DeliveryTransDTO;
 use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\Repository\ExistTypePayment\ExistTypePaymentInterface;
 use BaksDev\Payment\Type\Id\Choice\TypePaymentCache;
@@ -42,20 +33,6 @@ use BaksDev\Payment\Type\Id\PaymentUid;
 use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentDTO;
 use BaksDev\Payment\UseCase\Admin\NewEdit\PaymentHandler;
 use BaksDev\Payment\UseCase\Admin\NewEdit\Trans\PaymentTransDTO;
-use BaksDev\Reference\Currency\Type\Currency;
-use BaksDev\Reference\Money\Type\Money;
-use BaksDev\Users\Profile\TypeProfile\Entity\TypeProfile;
-use BaksDev\Users\Profile\TypeProfile\Repository\ExistTypeProfile\ExistTypeProfileInterface;
-use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
-use BaksDev\Users\Profile\TypeProfile\UseCase\Admin\NewEdit\Section\Fields\SectionFieldDTO;
-use BaksDev\Users\Profile\TypeProfile\UseCase\Admin\NewEdit\Section\Fields\Trans\SectionFieldTransDTO;
-use BaksDev\Users\Profile\TypeProfile\UseCase\Admin\NewEdit\Section\SectionDTO;
-use BaksDev\Users\Profile\TypeProfile\UseCase\Admin\NewEdit\Section\Trans\SectionTransDTO;
-use BaksDev\Users\Profile\TypeProfile\UseCase\Admin\NewEdit\Trans\TransDTO;
-use BaksDev\Users\Profile\TypeProfile\UseCase\Admin\NewEdit\TypeProfileDTO;
-use BaksDev\Users\Profile\TypeProfile\UseCase\Admin\NewEdit\TypeProfileHandler;
-use BaksDev\Yandex\Market\Orders\Type\DeliveryType\TypeDeliveryYandexMarket;
-use BaksDev\Yandex\Market\Orders\Type\ProfileType\TypeProfileYandexMarket;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -89,12 +66,12 @@ class UpgradePaymentTypeCacheCommand extends Command
         $this->paymentHandler = $paymentHandler;
     }
 
-    /** Добавляет доставку Yandex Market  */
+    /** Добавляет способ оплаты при получении */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $PaymentUid = new PaymentUid(TypePaymentCache::class);
 
-        /** Проверяем наличие доставки Yandex Market */
+        /** Проверяем наличие способа оплаты */
         $exists = $this->existTypePayment->isExists($PaymentUid);
 
         if(!$exists)
@@ -126,7 +103,7 @@ class UpgradePaymentTypeCacheCommand extends Command
             if(!$handle instanceof Payment)
             {
                 $io->error(
-                    sprintf('Ошибка %s при добавлении способа доставки', $handle)
+                    sprintf('Ошибка %s при добавлении способа оплаты', $handle)
                 );
 
                 return Command::FAILURE;
