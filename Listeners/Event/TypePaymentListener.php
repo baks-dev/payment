@@ -21,27 +21,38 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-return static function (ContainerConfigurator $configurator) {
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure()
-    ;
+namespace BaksDev\Payment\Listeners\Event;
 
-    $NAMESPACE = 'BaksDev\Payment\\';
+use BaksDev\Payment\Type\Id\Choice\Collection\TypePaymentCollection;
+use BaksDev\Payment\Type\Id\PaymentType;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
+#[AsEventListener(event: ControllerEvent::class)]
+#[AsEventListener(event: ConsoleEvents::COMMAND)]
+final class TypePaymentListener
+{
+    private TypePaymentCollection $collection;
 
-    $services->load($NAMESPACE, $MODULE)
-        ->exclude([
-            $MODULE.'{Entity,Resources,Type}',
-            $MODULE.'**/*Message.php',
-            $MODULE.'**/*DTO.php',
-        ])
-    ;
+    public function __construct(TypePaymentCollection $collection)
+    {
+        $this->collection = $collection;
+    }
 
-    $services->load($NAMESPACE.'Type\Id\Choice\\', $MODULE.'Type/Id/Choice');
+    public function onKernelController(ControllerEvent $event): void
+    {
+        if(in_array(PaymentType::class, get_declared_classes(), true))
+        {
+            $this->collection->cases();
+        }
+    }
 
-};
+    public function onConsoleCommand(ConsoleCommandEvent $event): void
+    {
+        $this->collection->cases();
+    }
+}

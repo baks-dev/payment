@@ -47,123 +47,123 @@ use InvalidArgumentException;
 #[ORM\Table(name: 'payment_event')]
 class PaymentEvent extends EntityEvent
 {
-	public const TABLE = 'payment_event';
-	
-	/** ID */
-	#[ORM\Id]
-	#[ORM\Column(type: PaymentEventUid::TYPE)]
-	private PaymentEventUid $id;
-	
-	/** ID Payment */
-	#[ORM\Column(type: PaymentUid::TYPE, nullable: false)]
-	private ?PaymentUid $payment = null;
-	
-	/** Обложка способа оплаты */
-	#[ORM\OneToOne(targetEntity: PaymentCover::class, mappedBy: 'event', cascade: ['all'])]
-	private ?PaymentCover $cover = null;
-	
-	/** Модификатор */
-	#[ORM\OneToOne(targetEntity: PaymentModify::class, mappedBy: 'event', cascade: ['all'])]
-	private PaymentModify $modify;
-	
-	/** Перевод */
-	#[ORM\OneToMany(targetEntity: PaymentTrans::class, mappedBy: 'event', cascade: ['all'])]
-	private Collection $translate;
-	
-	/** Перевод */
-	#[ORM\OneToMany(targetEntity: PaymentField::class, mappedBy: 'event', cascade: ['all'])]
-	private Collection $field;
-	
-	/** Сортировка */
-	#[ORM\Column(type: Types::SMALLINT, length: 3, options: ['default' => 500])]
-	private int $sort = 500;
-	
-	/** Флаг активности */
-	#[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
-	private bool $active = true;
-	
-	/** Профиль пользователя, которому доступна оплата */
-	#[ORM\Column(type: TypeProfileUid::TYPE, nullable: true)]
-	private ?TypeProfileUid $type = null;
-	
-	
-	public function __construct()
-	{
-		$this->id = new PaymentEventUid();
-		$this->modify = new PaymentModify($this);
-		
-	}
-	
-	public function __clone()
-	{
+    public const TABLE = 'payment_event';
+
+    /** ID */
+    #[ORM\Id]
+    #[ORM\Column(type: PaymentEventUid::TYPE)]
+    private PaymentEventUid $id;
+
+    /** ID Payment */
+    #[ORM\Column(type: PaymentUid::TYPE, nullable: false)]
+    private ?PaymentUid $main = null;
+
+    /** Обложка способа оплаты */
+    #[ORM\OneToOne(targetEntity: PaymentCover::class, mappedBy: 'event', cascade: ['all'])]
+    private ?PaymentCover $cover = null;
+
+    /** Модификатор */
+    #[ORM\OneToOne(targetEntity: PaymentModify::class, mappedBy: 'event', cascade: ['all'])]
+    private PaymentModify $modify;
+
+    /** Перевод */
+    #[ORM\OneToMany(targetEntity: PaymentTrans::class, mappedBy: 'event', cascade: ['all'])]
+    private Collection $translate;
+
+    /** Перевод */
+    #[ORM\OneToMany(targetEntity: PaymentField::class, mappedBy: 'event', cascade: ['all'])]
+    private Collection $field;
+
+    /** Сортировка */
+    #[ORM\Column(type: Types::SMALLINT, length: 3, options: ['default' => 500])]
+    private int $sort = 500;
+
+    /** Флаг активности */
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
+    private bool $active = true;
+
+    /** Профиль пользователя, которому доступна оплата */
+    #[ORM\Column(type: TypeProfileUid::TYPE, nullable: true)]
+    private ?TypeProfileUid $type = null;
+
+
+    public function __construct()
+    {
+        $this->id = new PaymentEventUid();
+        $this->modify = new PaymentModify($this);
+
+    }
+
+    public function __clone()
+    {
         $this->id = clone $this->id;
-	}
-	
-	public function __toString(): string
-	{
-		return (string) $this->id;
-	}
-	
-	public function getId() : PaymentEventUid
-	{
-		return $this->id;
-	}
-	
-	
-	public function setMain(PaymentUid|Payment $payment) : void
-	{
-		$this->payment = $payment instanceof Payment ? $payment->getId() : $payment;
-	}
-	
-	
-	public function getMain() : ?PaymentUid
-	{
-		return $this->payment;
-	}
-	
-	
-	public function getDto($dto): mixed
-	{
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
+    public function getId(): PaymentEventUid
+    {
+        return $this->id;
+    }
+
+
+    public function setMain(PaymentUid|Payment $main): void
+    {
+        $this->main = $main instanceof Payment ? $main->getId() : $main;
+    }
+
+
+    public function getMain(): ?PaymentUid
+    {
+        return $this->main;
+    }
+
+
+    public function getDto($dto): mixed
+    {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-		if($dto instanceof PaymentEventInterface)
-		{
-			return parent::getDto($dto);
-		}
-		
-		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-	}
-	
-	
-	public function setEntity($dto): mixed
-	{
-		if($dto instanceof PaymentEventInterface || $dto instanceof self)
-		{
-			return parent::setEntity($dto);
-		}
-		
-		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-	}
-	
-	public function getNameByLocale(Locale $locale) : ?string
-	{
-		$name = null;
-		
-		/** @var PaymentTrans $trans */
-		foreach($this->translate as $trans)
-		{
-			if($name = $trans->name($locale))
-			{
-				break;
-			}
-		}
-		
-		return $name;
-	}
-	
-	
-	public function getUploadCover() : PaymentCover
-	{
-		return $this->cover ?: $this->cover = new PaymentCover($this);
-	}
+        if($dto instanceof PaymentEventInterface)
+        {
+            return parent::getDto($dto);
+        }
+
+        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+    }
+
+
+    public function setEntity($dto): mixed
+    {
+        if($dto instanceof PaymentEventInterface || $dto instanceof self)
+        {
+            return parent::setEntity($dto);
+        }
+
+        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+    }
+
+    public function getNameByLocale(Locale $locale): ?string
+    {
+        $name = null;
+
+        /** @var PaymentTrans $trans */
+        foreach($this->translate as $trans)
+        {
+            if($name = $trans->name($locale))
+            {
+                break;
+            }
+        }
+
+        return $name;
+    }
+
+
+    public function getUploadCover(): PaymentCover
+    {
+        return $this->cover ?: $this->cover = new PaymentCover($this);
+    }
 }

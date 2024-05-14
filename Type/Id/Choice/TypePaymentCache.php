@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,40 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-return static function (ContainerConfigurator $configurator) {
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure()
-    ;
+namespace BaksDev\Payment\Type\Id\Choice;
 
-    $NAMESPACE = 'BaksDev\Payment\\';
+use BaksDev\Payment\Type\Id\Choice\Collection\TypePaymentInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
+#[AutoconfigureTag('baks.payment.type')]
+final class TypePaymentCache implements TypePaymentInterface
+{
+    /**
+     * Наличными при получении
+     */
+    public const TYPE = 'daa13576-9fe1-7c87-a430-e7f890c7c50c';
 
-    $services->load($NAMESPACE, $MODULE)
-        ->exclude([
-            $MODULE.'{Entity,Resources,Type}',
-            $MODULE.'**/*Message.php',
-            $MODULE.'**/*DTO.php',
-        ])
-    ;
+    public function __toString(): string
+    {
+        return self::TYPE;
+    }
 
-    $services->load($NAMESPACE.'Type\Id\Choice\\', $MODULE.'Type/Id/Choice');
+    /** Возвращает значение (value) */
+    public function getValue(): string
+    {
+        return self::TYPE;
+    }
 
-};
+    /** Сортировка */
+    public static function priority(): int
+    {
+        return 100;
+    }
+
+    public static function equals(mixed $uid): bool
+    {
+        return self::TYPE === (string) $uid;
+    }
+}

@@ -25,159 +25,212 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\UseCase\Admin\NewEdit;
 
+use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Files\Resources\Upload\Image\ImageUploadInterface;
 use BaksDev\Payment\Entity\Event\PaymentEvent;
 use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\Messenger\PaymentMessage;
 use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class PaymentHandler
+final class PaymentHandler extends AbstractHandler
 {
-    private EntityManagerInterface $entityManager;
+//    private EntityManagerInterface $entityManager;
+//
+//    private ValidatorInterface $validator;
+//
+//    private LoggerInterface $logger;
+//
+//    private ImageUploadInterface $imageUpload;
+//
+//    private MessageDispatchInterface $messageDispatch;
+//
+//    public function __construct(
+//        EntityManagerInterface $entityManager,
+//        ValidatorInterface $validator,
+//        LoggerInterface $logger,
+//        ImageUploadInterface $imageUpload,
+//        MessageDispatchInterface $messageDispatch,
+//    )
+//    {
+//        $this->entityManager = $entityManager;
+//        $this->validator = $validator;
+//        $this->logger = $logger;
+//        $this->imageUpload = $imageUpload;
+//        $this->messageDispatch = $messageDispatch;
+//    }
 
-    private ValidatorInterface $validator;
-
-    private LoggerInterface $logger;
-
-    private ImageUploadInterface $imageUpload;
-
-    private MessageDispatchInterface $messageDispatch;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        LoggerInterface $logger,
-        ImageUploadInterface $imageUpload,
-        MessageDispatchInterface $messageDispatch,
-    )
-    {
-        $this->entityManager = $entityManager;
-        $this->validator = $validator;
-        $this->logger = $logger;
-        $this->imageUpload = $imageUpload;
-        $this->messageDispatch = $messageDispatch;
-    }
 
     public function handle(PaymentDTO $command,): string|Payment
     {
-        /* Валидация DTO */
-        $errors = $this->validator->validate($command);
+        /* Валидация DTO  */
+        $this->validatorCollection->add($command);
 
-        if(count($errors) > 0)
+        $this->main = new Payment($command->getPaymentUid());
+        $this->event = new PaymentEvent();
+
+        try
         {
-            /** Ошибка валидации */
-            $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
-
-            return $uniqid;
+            $command->getEvent() ? $this->preUpdate($command) : $this->prePersist($command);
+        }
+        catch(DomainException $errorUniqid)
+        {
+            return $errorUniqid->getMessage();
         }
 
-        if($command->getEvent())
-        {
-            $EventRepo = $this->entityManager->getRepository(PaymentEvent::class)->find(
-                $command->getEvent()
-            );
 
-            if($EventRepo === null)
+        /* Загружаем файл обложки */
+        if(method_exists($command, 'getCover'))
+        {
+            /** @var Cover\PaymentCoverDTO $Avatar */
+            $Cover = $command->getCover();
+
+            if($Cover->file !== null)
             {
-                $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by id: %s',
-                    PaymentEvent::class,
-                    $command->getEvent()
-                );
-                $this->logger->error($uniqid.': '.$errorsString);
-
-                return $uniqid;
-            }
-
-            $EventRepo->setEntity($command);
-            $EventRepo->setEntityManager($this->entityManager);
-            $Event = $EventRepo->cloneEntity();
-        }
-        else
-        {
-            $Event = new PaymentEvent();
-            $Event->setEntity($command);
-            $this->entityManager->persist($Event);
-        }
-
-        //        $this->entityManager->clear();
-        //        $this->entityManager->persist($Event);
-
-
-        /* @var Payment $Main */
-        if($Event->getMain())
-        {
-            $Main = $this->entityManager->getRepository(Payment::class)
-                ->findOneBy(['event' => $command->getEvent()]);
-
-            if(empty($Main))
-            {
-                $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by event: %s',
-                    Payment::class,
-                    $command->getEvent()
-                );
-                $this->logger->error($uniqid.': '.$errorsString);
-
-                return $uniqid;
+                $DeliveryCover = $this->event->getUploadCover();
+                $this->imageUpload->upload($Cover->file, $DeliveryCover);
             }
         }
-        else
+
+
+        /* Валидация всех объектов */
+        if($this->validatorCollection->isInvalid())
         {
-            $Main = new Payment();
-            $this->entityManager->persist($Main);
-            $Event->setMain($Main);
+            return $this->validatorCollection->getErrorUniqid();
         }
-
-
-        /** Загружаем файл обложки.
-         *
-         * @var Cover\PaymentCoverDTO $Cover
-         */
-        $Cover = $command->getCover();
-
-        if($Cover->file !== null)
-        {
-            $PaymentCover = $Cover->getEntityUpload();
-            $this->imageUpload->upload($Cover->file, $PaymentCover);
-        }
-
-        /* присваиваем событие корню */
-        $Main->setEvent($Event);
-
-
-        /**
-         * Валидация Event
-         */
-
-        $errors = $this->validator->validate($Event);
-
-        if(count($errors) > 0)
-        {
-            /** Ошибка валидации */
-            $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
-
-            return $uniqid;
-        }
-
 
         $this->entityManager->flush();
 
-
         /* Отправляем событие в шину  */
         $this->messageDispatch->dispatch(
-            message: new PaymentMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
+            message: new PaymentMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
             transport: 'payment'
         );
 
-
-        return $Main;
+        return $this->main;
     }
+
+
+//    public function _handle(PaymentDTO $command,): string|Payment
+//    {
+//        /* Валидация DTO */
+//        $errors = $this->validator->validate($command);
+//
+//        if(count($errors) > 0)
+//        {
+//            /** Ошибка валидации */
+//            $uniqid = uniqid('', false);
+//            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+//
+//            return $uniqid;
+//        }
+//
+//        if($command->getEvent())
+//        {
+//            $EventRepo = $this->entityManager->getRepository(PaymentEvent::class)->find(
+//                $command->getEvent()
+//            );
+//
+//            if($EventRepo === null)
+//            {
+//                $uniqid = uniqid('', false);
+//                $errorsString = sprintf(
+//                    'Not found %s by id: %s',
+//                    PaymentEvent::class,
+//                    $command->getEvent()
+//                );
+//                $this->logger->error($uniqid.': '.$errorsString);
+//
+//                return $uniqid;
+//            }
+//
+//            $EventRepo->setEntity($command);
+//            $EventRepo->setEntityManager($this->entityManager);
+//            $Event = $EventRepo->cloneEntity();
+//        }
+//        else
+//        {
+//            $Event = new PaymentEvent();
+//            $Event->setEntity($command);
+//            $this->entityManager->persist($Event);
+//        }
+//
+//        //        $this->entityManager->clear();
+//        //        $this->entityManager->persist($Event);
+//
+//
+//        /* @var Payment $Main */
+//        if($Event->getMain())
+//        {
+//            $Main = $this->entityManager->getRepository(Payment::class)
+//                ->findOneBy(['event' => $command->getEvent()]);
+//
+//            if(empty($Main))
+//            {
+//                $uniqid = uniqid('', false);
+//                $errorsString = sprintf(
+//                    'Not found %s by event: %s',
+//                    Payment::class,
+//                    $command->getEvent()
+//                );
+//                $this->logger->error($uniqid.': '.$errorsString);
+//
+//                return $uniqid;
+//            }
+//        }
+//        else
+//        {
+//            $Main = new Payment();
+//            $this->entityManager->persist($Main);
+//            $Event->setMain($Main);
+//        }
+//
+//
+//        /** Загружаем файл обложки.
+//         *
+//         * @var Cover\PaymentCoverDTO $Cover
+//         */
+//        $Cover = $command->getCover();
+//
+//        if($Cover->file !== null)
+//        {
+//            $PaymentCover = $Cover->getEntityUpload();
+//            $this->imageUpload->upload($Cover->file, $PaymentCover);
+//        }
+//
+//        /* присваиваем событие корню */
+//        $Main->setEvent($Event);
+//
+//
+//        /**
+//         * Валидация Event
+//         */
+//
+//        $errors = $this->validator->validate($Event);
+//
+//        if(count($errors) > 0)
+//        {
+//            /** Ошибка валидации */
+//            $uniqid = uniqid('', false);
+//            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+//
+//            return $uniqid;
+//        }
+//
+//
+//        $this->entityManager->flush();
+//
+//
+//        /* Отправляем событие в шину  */
+//        $this->messageDispatch->dispatch(
+//            message: new PaymentMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
+//            transport: 'payment'
+//        );
+//
+//
+//        return $Main;
+//    }
 }

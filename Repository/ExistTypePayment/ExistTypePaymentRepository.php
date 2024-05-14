@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,43 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-return static function (ContainerConfigurator $configurator) {
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure()
-    ;
+namespace BaksDev\Payment\Repository\ExistTypePayment;
 
-    $NAMESPACE = 'BaksDev\Payment\\';
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use BaksDev\Payment\Entity\Payment;
+use BaksDev\Payment\Type\Id\PaymentUid;
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
+final class ExistTypePaymentRepository implements ExistTypePaymentInterface
+{
+    private DBALQueryBuilder $DBALQueryBuilder;
 
-    $services->load($NAMESPACE, $MODULE)
-        ->exclude([
-            $MODULE.'{Entity,Resources,Type}',
-            $MODULE.'**/*Message.php',
-            $MODULE.'**/*DTO.php',
-        ])
-    ;
+    public function __construct(
+        DBALQueryBuilder $DBALQueryBuilder,
+    )
+    {
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
+    }
 
-    $services->load($NAMESPACE.'Type\Id\Choice\\', $MODULE.'Type/Id/Choice');
+    /**
+     * Метод проверяет наличие способа оплаты
+     */
+    public function isExists(PaymentUid|string $payment): bool
+    {
+        if(is_string($payment))
+        {
+            $payment = new PaymentUid($payment);
+        }
 
-};
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+
+        $dbal
+            ->from(Payment::class, 'payment')
+            ->where('payment.id = :payment')
+            ->setParameter('payment', $payment, PaymentUid::TYPE)
+        ;
+
+        return $dbal->fetchExist();
+    }
+}

@@ -21,27 +21,35 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-return static function (ContainerConfigurator $configurator) {
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure()
-    ;
+namespace BaksDev\Payment\Type\Id\Choice\Collection;
 
-    $NAMESPACE = 'BaksDev\Payment\\';
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
+final class TypePaymentCollection
+{
+    private iterable $type;
 
-    $services->load($NAMESPACE, $MODULE)
-        ->exclude([
-            $MODULE.'{Entity,Resources,Type}',
-            $MODULE.'**/*Message.php',
-            $MODULE.'**/*DTO.php',
-        ])
-    ;
+    public function __construct(
+        #[TaggedIterator('baks.payment.type', defaultPriorityMethod: 'priority')] iterable $type
+    )
+    {
+        $this->type = $type;
+    }
 
-    $services->load($NAMESPACE.'Type\Id\Choice\\', $MODULE.'Type/Id/Choice');
+    public function cases(): array
+    {
+        $case = null;
 
-};
+        foreach($this->type as $key => $type)
+        {
+            $case[$type::priority().$key] = new $type();
+        }
+
+        ksort($case);
+
+        return $case;
+    }
+
+}

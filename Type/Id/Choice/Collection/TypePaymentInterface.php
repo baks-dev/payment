@@ -21,27 +21,19 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+namespace BaksDev\Payment\Type\Id\Choice\Collection;
 
-return static function (ContainerConfigurator $configurator) {
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure()
-    ;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-    $NAMESPACE = 'BaksDev\Payment\\';
+#[AutoconfigureTag('baks.payment.type')]
+interface TypePaymentInterface
+{
+    public function __toString(): string;
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
+    public function getValue(): string;
 
-    $services->load($NAMESPACE, $MODULE)
-        ->exclude([
-            $MODULE.'{Entity,Resources,Type}',
-            $MODULE.'**/*Message.php',
-            $MODULE.'**/*DTO.php',
-        ])
-    ;
+    public static function priority(): int;
 
-    $services->load($NAMESPACE.'Type\Id\Choice\\', $MODULE.'Type/Id/Choice');
+    public static function equals(mixed $uid): bool;
 
-};
+}

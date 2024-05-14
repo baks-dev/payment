@@ -28,8 +28,13 @@ namespace BaksDev\Payment\Repository\AllPayments;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Payment\Entity as PaymentEntity;
-use BaksDev\Users\Profile\TypeProfile\Entity as TypeProfileEntity;
+use BaksDev\Payment\Entity\Cover\PaymentCover;
+use BaksDev\Payment\Entity\Event\PaymentEvent;
+use BaksDev\Payment\Entity\Payment;
+use BaksDev\Payment\Entity\Trans\PaymentTrans;
+use BaksDev\Users\Profile\TypeProfile\Entity\Event\TypeProfileEvent;
+use BaksDev\Users\Profile\TypeProfile\Entity\Trans\TypeProfileTrans;
+use BaksDev\Users\Profile\TypeProfile\Entity\TypeProfile;
 
 final class AllPaymentsRepository implements AllPaymentsInterface
 {
@@ -43,7 +48,6 @@ final class AllPaymentsRepository implements AllPaymentsInterface
         PaginatorInterface $paginator,
     )
     {
-
         $this->paginator = $paginator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
@@ -56,66 +60,67 @@ final class AllPaymentsRepository implements AllPaymentsInterface
             ->bindLocal();
 
 
-        $qb->select('payment.id');
-        $qb->addSelect('payment.event');
-        $qb->from(PaymentEntity\Payment::TABLE, 'payment');
+        $qb
+            ->select('payment.id')
+            ->addSelect('payment.event')
+            ->from(Payment::class, 'payment');
 
-        $qb->addSelect('event.sort AS payment_sort');
-        $qb->addSelect('event.active AS payment_active');
-        $qb->join('payment', PaymentEntity\Event\PaymentEvent::TABLE, 'event', 'event.id = payment.event');
+        $qb
+            ->addSelect('event.sort AS payment_sort')
+            ->addSelect('event.active AS payment_active')
+            ->join(
+                'payment',
+                PaymentEvent::class,
+                'event',
+                'event.id = payment.event'
+            );
 
-        $qb->addSelect('trans.name AS payment_name');
-        $qb->addSelect('trans.description AS payment_description');
-
-        $qb->leftJoin('event',
-            PaymentEntity\Trans\PaymentTrans::TABLE,
-            'trans',
-            'trans.event = event.id AND trans.local = :local'
-        );
+        $qb
+            ->addSelect('trans.name AS payment_name')
+            ->addSelect('trans.description AS payment_description')
+            ->leftJoin(
+                'event',
+                PaymentTrans::class,
+                'trans',
+                'trans.event = event.id AND trans.local = :local'
+            );
 
 
         /** Обложка */
-        $qb->addSelect('cover.ext AS payment_cover_ext');
-        $qb->addSelect('cover.cdn AS payment_cover_cdn');
-
-        $qb->addSelect("
+        $qb
+            ->addSelect('cover.ext AS payment_cover_ext')
+            ->addSelect('cover.cdn AS payment_cover_cdn')
+            ->addSelect("
 			CASE
 			   WHEN cover.name IS NOT NULL THEN
-					CONCAT ( '/upload/".PaymentEntity\Cover\PaymentCover::TABLE."' , '/', cover.name)
+					CONCAT ( '/upload/".$qb->table(PaymentCover::class)."' , '/', cover.name)
 			   ELSE NULL
 			END AS payment_cover_name
 		"
-        );
+            )
+            ->leftJoin('event',
+                PaymentCover::class,
+                'cover',
+                'cover.event = event.id'
+            );
 
-
-        $qb->leftJoin('event',
-            PaymentEntity\Cover\PaymentCover::TABLE,
-            'cover',
-            'cover.event = event.id'
-        );
 
         /** Ограничение профилем */
 
-
         $qb->leftJoin('event',
-            TypeProfileEntity\TypeProfile::TABLE,
+            TypeProfile::class,
             'type_profile',
             'event.type IS NOT NULL AND type_profile.id = event.type'
         );
 
-        $qb->leftJoin('type_profile',
-            TypeProfileEntity\Event\TypeProfileEvent::TABLE,
-            'type_profile_event',
-            'type_profile_event.id = type_profile.event'
-        );
-
-        $qb->addSelect('type_profile_trans.name AS type_profile_name');
-
-        $qb->leftJoin('type_profile_event',
-            TypeProfileEntity\Trans\TypeProfileTrans::TABLE,
-            'type_profile_trans',
-            'type_profile_trans.event = type_profile_event.id AND type_profile_trans.local = :local'
-        );
+        $qb
+            ->addSelect('type_profile_trans.name AS type_profile_name')
+            ->leftJoin(
+                'type_profile',
+                TypeProfileTrans::class,
+                'type_profile_trans',
+                'type_profile_trans.event = type_profile.event AND type_profile_trans.local = :local'
+            );
 
 
         /* Поиск */

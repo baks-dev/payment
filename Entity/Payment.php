@@ -50,9 +50,9 @@ class Payment
 	private PaymentEventUid $event;
 	
 	
-	public function __construct()
+	public function __construct(?PaymentUid $id = null)
 	{
-		$this->id = new PaymentUid();
+		$this->id = new PaymentUid($id);
 	}
 
     public function __toString(): string

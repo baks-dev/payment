@@ -28,12 +28,18 @@ namespace BaksDev\Payment\UseCase\Admin\NewEdit;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Payment\Entity\Event\PaymentEventInterface;
 use BaksDev\Payment\Type\Event\PaymentEventUid;
+use BaksDev\Payment\Type\Id\PaymentUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/** @see PaymentEvent */
 final class PaymentDTO implements PaymentEventInterface
 {
+    /** Идентификатор */
+    #[Assert\Uuid]
+    private ?PaymentUid $payment = null;
+
 	
 	/** Идентификатор события */
 	#[Assert\Uuid]
@@ -62,8 +68,13 @@ final class PaymentDTO implements PaymentEventInterface
 	private bool $active = true;
 	
 	
-	public function __construct()
+	public function __construct(?PaymentUid $payment = null)
 	{
+        if($payment)
+        {
+            $this->payment = $payment;
+        }
+
 		$this->translate = new ArrayCollection();
 		$this->field = new ArrayCollection();
 		$this->cover = new Cover\PaymentCoverDTO();
@@ -74,7 +85,15 @@ final class PaymentDTO implements PaymentEventInterface
 	{
 		return $this->id;
 	}
-	
+
+    /**
+     * Payment
+     */
+    public function getPaymentUid(): ?PaymentUid
+    {
+        return $this->payment;
+    }
+
 	
 	/** Перевод (настройки локали) способа оплаты */
 	
