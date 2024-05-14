@@ -34,7 +34,7 @@ final class TypePaymentCache implements TypePaymentInterface
     /**
      * Наличными при получении
      */
-    public const TYPE = 'daa13576-9fe1-7c87-a430-e7f890c7c50c';
+    public const TYPE = '01876b9a-f696-7c7b-87cd-1dc3ab014ed8';
 
     public function __toString(): string
     {
