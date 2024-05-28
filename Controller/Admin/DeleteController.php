@@ -57,7 +57,10 @@ final class DeleteController extends AbstractController
         );
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('payment_delete')) {
+        if ($form->isSubmitted() && $form->isValid() && $form->has('payment_delete'))
+        {
+            $this->refreshTokenForm($form);
+
             $Payment = $handler->handle($PaymentDeleteDTO);
 
             if ($Payment instanceof Entity\Payment) {

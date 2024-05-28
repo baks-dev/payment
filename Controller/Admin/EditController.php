@@ -56,7 +56,10 @@ final class EditController extends AbstractController
         $form = $this->createForm(PaymentForm::class, $PaymentDTO);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('payment')) {
+        if ($form->isSubmitted() && $form->isValid() && $form->has('payment'))
+        {
+            $this->refreshTokenForm($form);
+
             $Payment = $paymentHandler->handle($PaymentDTO);
 
             if ($Payment instanceof Payment) {
