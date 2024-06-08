@@ -23,12 +23,37 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Symfony\Config\TwigConfig;
 
-return static function(TwigConfig $config) {
-    $config->path(__DIR__.'/../view', 'payment');
+
+use BaksDev\Contacts\Region\Type\Id\ContactsRegionType;
+use BaksDev\Contacts\Region\Type\Id\ContactsRegionUid;
+use BaksDev\Payment\BaksDevPaymentBundle;
+use BaksDev\Payment\Type\Cover\PaymentCoverType;
+use BaksDev\Payment\Type\Cover\PaymentCoverUid;
+use BaksDev\Payment\Type\Event\PaymentEventType;
+use BaksDev\Payment\Type\Event\PaymentEventUid;
+use BaksDev\Payment\Type\Field\PaymentFieldType;
+use BaksDev\Payment\Type\Field\PaymentFieldUid;
+use BaksDev\Payment\Type\Id\PaymentType;
+use BaksDev\Payment\Type\Id\PaymentUid;
+use Symfony\Config\DoctrineConfig;
+
+return static function(ContainerConfigurator $container, DoctrineConfig $doctrine) {
+	
+	$doctrine->dbal()->type(PaymentUid::TYPE)->class(PaymentType::class);
+	$doctrine->dbal()->type(PaymentEventUid::TYPE)->class(PaymentEventType::class);
+	$doctrine->dbal()->type(PaymentFieldUid::TYPE)->class(PaymentFieldType::class);
+	$doctrine->dbal()->type(PaymentCoverUid::TYPE)->class(PaymentCoverType::class);
+
+
+    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
+
+
+    $emDefault->mapping('payment')
+		->type('attribute')
+		->dir(BaksDevPaymentBundle::PATH.'Entity')
+		->isBundle(false)
+		->prefix('BaksDev\Payment\Entity')
+		->alias('payment')
+	;
 };
-
-
-
-

@@ -23,37 +23,16 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use BaksDev\Payment\BaksDevPaymentBundle;
+use Symfony\Config\FrameworkConfig;
 
+return static function(FrameworkConfig $config) {
 
-use BaksDev\Contacts\Region\Type\Id\ContactsRegionType;
-use BaksDev\Contacts\Region\Type\Id\ContactsRegionUid;
-use BaksDev\Payment\Type\Cover\PaymentCoverType;
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
-use BaksDev\Payment\Type\Event\PaymentEventType;
-use BaksDev\Payment\Type\Event\PaymentEventUid;
-use BaksDev\Payment\Type\Field\PaymentFieldType;
-use BaksDev\Payment\Type\Field\PaymentFieldUid;
-use BaksDev\Payment\Type\Id\PaymentType;
-use BaksDev\Payment\Type\Id\PaymentUid;
-use Symfony\Config\DoctrineConfig;
+    $config
+        ->translator()
+        ->paths([BaksDevPaymentBundle::PATH.'Resources/translations/']);
 
-return static function(ContainerConfigurator $container, DoctrineConfig $doctrine) {
-	
-	$doctrine->dbal()->type(PaymentUid::TYPE)->class(PaymentType::class);
-	$doctrine->dbal()->type(PaymentEventUid::TYPE)->class(PaymentEventType::class);
-	$doctrine->dbal()->type(PaymentFieldUid::TYPE)->class(PaymentFieldType::class);
-	$doctrine->dbal()->type(PaymentCoverUid::TYPE)->class(PaymentCoverType::class);
-
-
-    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
-
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
-
-    $emDefault->mapping('payment')
-		->type('attribute')
-		->dir($MODULE.'Entity')
-		->isBundle(false)
-		->prefix('BaksDev\Payment\Entity')
-		->alias('payment')
-	;
 };
+
+
+

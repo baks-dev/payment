@@ -23,11 +23,18 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Symfony\Config\FrameworkConfig;
+use BaksDev\Payment\BaksDevPaymentBundle;
+use Symfony\Config\TwigConfig;
 
-return static function(FrameworkConfig $config) {
-	$config->translator()->paths([__DIR__.'/../translations']);
+return static function(TwigConfig $twig) {
+
+    $twig->path(
+        BaksDevPaymentBundle::PATH.'Resources/view',
+        'payment'
+    );
+
 };
+
 
 
 

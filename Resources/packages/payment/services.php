@@ -23,6 +23,8 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use BaksDev\Payment\BaksDevPaymentBundle;
+
 return static function (ContainerConfigurator $configurator) {
     $services = $configurator->services()
         ->defaults()
@@ -30,18 +32,17 @@ return static function (ContainerConfigurator $configurator) {
         ->autoconfigure()
     ;
 
-    $NAMESPACE = 'BaksDev\Payment\\';
+    $NAMESPACE = BaksDevPaymentBundle::NAMESPACE;
+    $PATH = BaksDevPaymentBundle::PATH;
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
-
-    $services->load($NAMESPACE, $MODULE)
+    $services->load($NAMESPACE, $PATH)
         ->exclude([
-            $MODULE.'{Entity,Resources,Type}',
-            $MODULE.'**/*Message.php',
-            $MODULE.'**/*DTO.php',
+            $PATH.'{Entity,Resources,Type}',
+            $PATH.'**/*Message.php',
+            $PATH.'**/*DTO.php',
         ])
     ;
 
-    $services->load($NAMESPACE.'Type\Id\Choice\\', $MODULE.'Type/Id/Choice');
+    $services->load($NAMESPACE.'Type\Id\Choice\\', $PATH.'Type/Id/Choice');
 
 };
