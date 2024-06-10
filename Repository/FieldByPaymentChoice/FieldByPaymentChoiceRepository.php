@@ -27,6 +27,7 @@ namespace BaksDev\Payment\Repository\FieldByPaymentChoice;
 
 use BaksDev\Contacts\Region\Type\Call\ContactsRegionCallUid;
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Orders\Order\Repository\FieldByPaymentChoice\FieldByPaymentChoiceInterface;
 use BaksDev\Payment\Type\Field\PaymentFieldUid;
 use BaksDev\Payment\Type\Id\PaymentUid;
 use Doctrine\ORM\EntityManagerInterface;

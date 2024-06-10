@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Payment\Repository\PaymentByTypeProfileChoice;
 
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Orders\Order\Repository\PaymentByTypeProfileChoice\PaymentByTypeProfileChoiceInterface;
 use BaksDev\Payment\Entity as PaymentEntity;
 use BaksDev\Payment\Type\Id\PaymentUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;

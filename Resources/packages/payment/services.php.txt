@@ -23,14 +23,17 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use BaksDev\Orders\Order\Repository\FieldByPaymentChoice\FieldByPaymentChoiceInterface;
+use BaksDev\Orders\Order\Repository\PaymentByTypeProfileChoice\PaymentByTypeProfileChoiceInterface;
 use BaksDev\Payment\BaksDevPaymentBundle;
+use BaksDev\Payment\Repository\FieldByPaymentChoice\FieldByPaymentChoiceRepository;
+use BaksDev\Payment\Repository\PaymentByTypeProfileChoice\PaymentByTypeProfileChoiceRepository;
 
-return static function (ContainerConfigurator $configurator) {
+return static function(ContainerConfigurator $configurator) {
     $services = $configurator->services()
         ->defaults()
         ->autowire()
-        ->autoconfigure()
-    ;
+        ->autoconfigure();
 
     $NAMESPACE = BaksDevPaymentBundle::NAMESPACE;
     $PATH = BaksDevPaymentBundle::PATH;
@@ -40,9 +43,17 @@ return static function (ContainerConfigurator $configurator) {
             $PATH.'{Entity,Resources,Type}',
             $PATH.'**/*Message.php',
             $PATH.'**/*DTO.php',
-        ])
-    ;
+        ]);
 
     $services->load($NAMESPACE.'Type\Id\Choice\\', $PATH.'Type/Id/Choice');
+
+    $services->alias(
+        PaymentByTypeProfileChoiceInterface::class.' $paymentChoice',
+        PaymentByTypeProfileChoiceRepository::class);
+
+    $services->alias(
+        FieldByPaymentChoiceInterface::class.' $paymentFields',
+        FieldByPaymentChoiceRepository::class);
+
 
 };
