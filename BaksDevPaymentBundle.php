@@ -14,8 +14,6 @@ namespace BaksDev\Payment;
 
 use BaksDev\Orders\Order\Repository\FieldByPaymentChoice\FieldByPaymentChoiceInterface;
 use BaksDev\Orders\Order\Repository\PaymentByTypeProfileChoice\PaymentByTypeProfileChoiceInterface;
-use BaksDev\Payment\Repository\FieldByPaymentChoice\FieldByPaymentChoiceRepository;
-use BaksDev\Payment\Repository\PaymentByTypeProfileChoice\PaymentByTypeProfileChoiceRepository;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
@@ -45,12 +43,5 @@ class BaksDevPaymentBundle extends AbstractBundle
             self::PATH.'Type/Id/Choice'
         );
 
-        $services->bind(
-            PaymentByTypeProfileChoiceInterface::class.' $paymentChoice',
-            PaymentByTypeProfileChoiceRepository::class);
-
-        $services->bind(
-            FieldByPaymentChoiceInterface::class.' $paymentFields',
-            FieldByPaymentChoiceRepository::class);
     }
 }
