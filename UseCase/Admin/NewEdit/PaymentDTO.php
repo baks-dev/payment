@@ -40,51 +40,51 @@ final class PaymentDTO implements PaymentEventInterface
     #[Assert\Uuid]
     private ?PaymentUid $payment = null;
 
-	
-	/** Идентификатор события */
-	#[Assert\Uuid]
-	private ?PaymentEventUid $id = null;
-	
-	/** Профиль пользователя, которому доступна оплата (null - все) */
-	private ?TypeProfileUid $type = null;
-	
-	/** Обложка способа оплаты */
-	#[Assert\Valid]
-	private Cover\PaymentCoverDTO $cover;
-	
-	/** Перевод (настройки локали) способа оплаты */
-	#[Assert\Valid]
-	private ArrayCollection $translate;
-	
-	/** Поля для заполнения */
-	#[Assert\Valid]
-	private ArrayCollection $field;
-	
-	/** Сортировка */
-	#[Assert\NotBlank]
-	private int $sort = 500;
-	
-	/** Флаг активности */
-	private bool $active = true;
-	
-	
-	public function __construct(?PaymentUid $payment = null)
-	{
+
+    /** Идентификатор события */
+    #[Assert\Uuid]
+    private ?PaymentEventUid $id = null;
+
+    /** Профиль пользователя, которому доступна оплата (null - все) */
+    private ?TypeProfileUid $type = null;
+
+    /** Обложка способа оплаты */
+    #[Assert\Valid]
+    private Cover\PaymentCoverDTO $cover;
+
+    /** Перевод (настройки локали) способа оплаты */
+    #[Assert\Valid]
+    private ArrayCollection $translate;
+
+    /** Поля для заполнения */
+    #[Assert\Valid]
+    private ArrayCollection $field;
+
+    /** Сортировка */
+    #[Assert\NotBlank]
+    private int $sort = 500;
+
+    /** Флаг активности */
+    private bool $active = true;
+
+
+    public function __construct(?PaymentUid $payment = null)
+    {
         if($payment)
         {
             $this->payment = $payment;
         }
 
-		$this->translate = new ArrayCollection();
-		$this->field = new ArrayCollection();
-		$this->cover = new Cover\PaymentCoverDTO();
-	}
-	
-	
-	public function getEvent() : ?PaymentEventUid
-	{
-		return $this->id;
-	}
+        $this->translate = new ArrayCollection();
+        $this->field = new ArrayCollection();
+        $this->cover = new Cover\PaymentCoverDTO();
+    }
+
+
+    public function getEvent(): ?PaymentEventUid
+    {
+        return $this->id;
+    }
 
     /**
      * Payment
@@ -94,129 +94,129 @@ final class PaymentDTO implements PaymentEventInterface
         return $this->payment;
     }
 
-	
-	/** Перевод (настройки локали) способа оплаты */
-	
-	public function setTranslate(ArrayCollection $trans) : void
-	{
-		$this->translate = $trans;
-	}
-	
-	
-	public function getTranslate() : ArrayCollection
-	{
-		/* Вычисляем расхождение и добавляем неопределенные локали */
-		foreach(Locale::diffLocale($this->translate) as $locale)
-		{
-			$PaymentTransDTO = new Trans\PaymentTransDTO;
-			$PaymentTransDTO->setLocal($locale);
-			$this->addTranslate($PaymentTransDTO);
-		}
-		
-		return $this->translate;
-	}
-	
-	
-	public function addTranslate(Trans\PaymentTransDTO $trans) : void
-	{
+
+    /** Перевод (настройки локали) способа оплаты */
+
+    public function setTranslate(ArrayCollection $trans): void
+    {
+        $this->translate = $trans;
+    }
+
+
+    public function getTranslate(): ArrayCollection
+    {
+        /* Вычисляем расхождение и добавляем неопределенные локали */
+        foreach(Locale::diffLocale($this->translate) as $locale)
+        {
+            $PaymentTransDTO = new Trans\PaymentTransDTO();
+            $PaymentTransDTO->setLocal($locale);
+            $this->addTranslate($PaymentTransDTO);
+        }
+
+        return $this->translate;
+    }
+
+
+    public function addTranslate(Trans\PaymentTransDTO $trans): void
+    {
         if(empty($trans->getLocal()->getLocalValue()))
         {
             return;
         }
 
-		if(!$this->translate->contains($trans))
-		{
-			$this->translate->add($trans);
-		}
-	}
-	
-	
-	public function removeTranslate(Trans\PaymentTransDTO $trans) : void
-	{
-		$this->translate->removeElement($trans);
-	}
-	
-	
-	/** Поля для заполнения */
-	
-	public function getField() : ArrayCollection
-	{
-		return $this->field;
-	}
-	
-	
-	public function setField(ArrayCollection $field) : void
-	{
-		$this->field = $field;
-	}
-	
-	
-	public function addField(Fields\PaymentFieldDTO $field) : void
-	{
-		if(!$this->field->contains($field))
-		{
-			$this->field->add($field);
-		}
-	}
-	
-	
-	public function removeField(Fields\PaymentFieldDTO $field) : void
-	{
-		$this->field->removeElement($field);
-	}
-	
-	
-	/** Обложка способа оплаты */
-	
-	public function getCover() : Cover\PaymentCoverDTO
-	{
-		return $this->cover;
-	}
-	
-	
-	public function setCover(Cover\PaymentCoverDTO $cover) : void
-	{
-		$this->cover = $cover;
-	}
-	
-	
-	/** Сортировка */
-	
-	public function getSort() : int
-	{
-		return $this->sort;
-	}
-	
-	
-	public function setSort(int $sort) : void
-	{
-		$this->sort = $sort;
-	}
-	
-	
-	/** Флаг активности */
-	
-	public function getActive() : bool
-	{
-		return $this->active;
-	}
+        if(!$this->translate->contains($trans))
+        {
+            $this->translate->add($trans);
+        }
+    }
 
-	public function setActive(bool $active) : void
-	{
-		$this->active = $active;
-	}
-	
-	
-	/** Профиль пользователя, которому доступна оплата */
 
-	public function getType() : ?TypeProfileUid
-	{
-		return $this->type;
-	}
-	
-	public function setType(?TypeProfileUid $type) : void
-	{
-		$this->type = $type;
-	}
-	
+    public function removeTranslate(Trans\PaymentTransDTO $trans): void
+    {
+        $this->translate->removeElement($trans);
+    }
+
+
+    /** Поля для заполнения */
+
+    public function getField(): ArrayCollection
+    {
+        return $this->field;
+    }
+
+
+    public function setField(ArrayCollection $field): void
+    {
+        $this->field = $field;
+    }
+
+
+    public function addField(Fields\PaymentFieldDTO $field): void
+    {
+        if(!$this->field->contains($field))
+        {
+            $this->field->add($field);
+        }
+    }
+
+
+    public function removeField(Fields\PaymentFieldDTO $field): void
+    {
+        $this->field->removeElement($field);
+    }
+
+
+    /** Обложка способа оплаты */
+
+    public function getCover(): Cover\PaymentCoverDTO
+    {
+        return $this->cover;
+    }
+
+
+    public function setCover(Cover\PaymentCoverDTO $cover): void
+    {
+        $this->cover = $cover;
+    }
+
+
+    /** Сортировка */
+
+    public function getSort(): int
+    {
+        return $this->sort;
+    }
+
+
+    public function setSort(int $sort): void
+    {
+        $this->sort = $sort;
+    }
+
+
+    /** Флаг активности */
+
+    public function getActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): void
+    {
+        $this->active = $active;
+    }
+
+
+    /** Профиль пользователя, которому доступна оплата */
+
+    public function getType(): ?TypeProfileUid
+    {
+        return $this->type;
+    }
+
+    public function setType(?TypeProfileUid $type): void
+    {
+        $this->type = $type;
+    }
+
 }
