@@ -218,5 +218,4 @@ final class PaymentDTO implements PaymentEventInterface
     {
         $this->type = $type;
     }
-
 }
