@@ -26,19 +26,18 @@ use BaksDev\Core\Type\Modify\Modify\ModifyActionUpdate;
 
 final class ModifyDTO implements PaymentModifyInterface
 {
-	/** Модификатор */
-	private readonly ModifyAction $action;
-	
-	
-	public function __construct()
-	{
-		$this->action = new ModifyAction(ModifyActionDelete::class);
-	}
+    /** Модификатор */
+    private readonly ModifyAction $action;
 
-	public function getAction() : ModifyAction
-	{
-		return $this->action;
-	}
-	
+
+    public function __construct()
+    {
+        $this->action = new ModifyAction(ModifyActionDelete::class);
+    }
+
+    public function getAction(): ModifyAction
+    {
+        return $this->action;
+    }
+
 }
-
