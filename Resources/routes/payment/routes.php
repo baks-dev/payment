@@ -25,6 +25,9 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return function (RoutingConfigurator $routes) {
 
+
+
+
     $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
 
     $routes->import(
