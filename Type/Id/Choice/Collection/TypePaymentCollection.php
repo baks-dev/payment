@@ -25,14 +25,14 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Type\Id\Choice\Collection;
 
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 final class TypePaymentCollection
 {
     private iterable $type;
 
     public function __construct(
-        #[TaggedIterator('baks.payment.type', defaultPriorityMethod: 'priority')] iterable $type
+        #[AutowireIterator('baks.payment.type', defaultPriorityMethod: 'priority')] iterable $type
     )
     {
         $this->type = $type;
