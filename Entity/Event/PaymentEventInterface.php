@@ -27,6 +27,6 @@ use BaksDev\Payment\Type\Event\PaymentEventUid;
 
 interface PaymentEventInterface
 {
-	public function getEvent() : ?PaymentEventUid;
-	
+    public function getEvent(): ?PaymentEventUid;
+
 }

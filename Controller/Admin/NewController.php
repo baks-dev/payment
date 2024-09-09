@@ -45,19 +45,20 @@ final class NewController extends AbstractController
         Request $request,
         PaymentHandler $paymentHandler
     ): Response {
+
         $PaymentDTO = new PaymentDTO();
 
-        // Форма
         $form = $this->createForm(PaymentForm::class, $PaymentDTO);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('payment'))
+        if($form->isSubmitted() && $form->isValid() && $form->has('payment'))
         {
             $this->refreshTokenForm($form);
 
             $Payment = $paymentHandler->handle($PaymentDTO);
 
-            if ($Payment instanceof Payment) {
+            if($Payment instanceof Payment)
+            {
                 $this->addFlash('success', 'admin.success.new', 'admin.payment');
 
                 return $this->redirectToRoute('payment:admin.index');

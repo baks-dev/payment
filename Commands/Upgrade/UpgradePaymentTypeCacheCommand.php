@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\Commands\Upgrade;
 
-
 use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\Repository\ExistTypePayment\ExistTypePaymentInterface;
 use BaksDev\Payment\Type\Id\Choice\TypePaymentCache;
@@ -49,21 +48,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UpgradePaymentTypeCacheCommand extends Command
 {
 
-    private TranslatorInterface $translator;
-    private PaymentHandler $paymentHandler;
-    private ExistTypePaymentInterface $existTypePayment;
-
     public function __construct(
-        ExistTypePaymentInterface $existTypePayment,
-        PaymentHandler $paymentHandler,
-        TranslatorInterface $translator,
-    )
-    {
+        private readonly ExistTypePaymentInterface $existTypePayment,
+        private readonly PaymentHandler $paymentHandler,
+        private readonly TranslatorInterface $translator,
+    ) {
         parent::__construct();
-
-        $this->translator = $translator;
-        $this->existTypePayment = $existTypePayment;
-        $this->paymentHandler = $paymentHandler;
     }
 
     /** Добавляет способ оплаты при получении */
