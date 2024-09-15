@@ -21,22 +21,15 @@
  *  THE SOFTWARE.
  */
 
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-return function (RoutingConfigurator $routes) {
+use BaksDev\Payment\BaksDevPaymentBundle;
+use Symfony\Config\FrameworkConfig;
 
+return static function (FrameworkConfig $config) {
 
+    $config
+        ->translator()
+        ->paths([BaksDevPaymentBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'translations', ''])]); // .'Resources/translations/']);
 
-
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
-
-    $routes->import(
-        $MODULE.'Controller',
-        'attribute',
-        false,
-        $MODULE.'Controller/**/*Test.php'
-    )
-        ->prefix(\BaksDev\Core\Type\Locale\Locale::routes())
-        ->namePrefix('payment:')
-    ;
 };
