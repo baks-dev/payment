@@ -10,7 +10,7 @@
 # systemctl stop baks-payment@1.service
 
 [Unit]
-Description=Symfony messenger payment %i
+Description=payment
 StartLimitBurst=5
 StartLimitIntervalSec=0
 
