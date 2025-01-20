@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,44 +26,13 @@ declare(strict_types=1);
 namespace BaksDev\Payment\UseCase\Admin\NewEdit;
 
 use BaksDev\Core\Entity\AbstractHandler;
-use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Files\Resources\Upload\Image\ImageUploadInterface;
 use BaksDev\Payment\Entity\Event\PaymentEvent;
 use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\Messenger\PaymentMessage;
-use Doctrine\ORM\EntityManagerInterface;
 use DomainException;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PaymentHandler extends AbstractHandler
 {
-//    private EntityManagerInterface $entityManager;
-//
-//    private ValidatorInterface $validator;
-//
-//    private LoggerInterface $logger;
-//
-//    private ImageUploadInterface $imageUpload;
-//
-//    private MessageDispatchInterface $messageDispatch;
-//
-//    public function __construct(
-//        EntityManagerInterface $entityManager,
-//        ValidatorInterface $validator,
-//        LoggerInterface $logger,
-//        ImageUploadInterface $imageUpload,
-//        MessageDispatchInterface $messageDispatch,
-//    )
-//    {
-//        $this->entityManager = $entityManager;
-//        $this->validator = $validator;
-//        $this->logger = $logger;
-//        $this->imageUpload = $imageUpload;
-//        $this->messageDispatch = $messageDispatch;
-//    }
-
-
     public function handle(PaymentDTO $command,): string|Payment
     {
         /* Валидация DTO  */
