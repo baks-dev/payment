@@ -25,120 +25,34 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\UseCase\Admin\Delete;
 
-use BaksDev\Payment\Entity;
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Target;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use BaksDev\Core\Entity\AbstractHandler;
+use BaksDev\Payment\Entity\Event\PaymentEvent;
+use BaksDev\Payment\Entity\Payment;
+use BaksDev\Payment\Messenger\PaymentMessage;
 
-final readonly class PaymentDeleteHandler
+final class PaymentDeleteHandler extends AbstractHandler
 {
-    public function __construct(
-        #[Target('paymentLogger')] private LoggerInterface $logger,
-        private EntityManagerInterface $entityManager,
-        private ValidatorInterface $validator,
-    ) {}
-
-
-    public function handle(PaymentDeleteDTO $command): string|Entity\Payment
+    public function handle(PaymentDeleteDTO $command): string|Payment
     {
 
-        /* Валидация DTO */
-        $errors = $this->validator->validate($command);
+        $this->setCommand($command)
+            ->preEventRemove(Payment::class, PaymentEvent::class);
 
-        if(count($errors) > 0)
+        /* Валидация всех объектов */
+        if($this->validatorCollection->isInvalid())
         {
-            /** Ошибка валидации */
-            $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [self::class.':'.__LINE__]);
-
-            return $uniqid;
+            return $this->validatorCollection->getErrorUniqid();
         }
 
-        /* Обязательно передается идентификатор события */
-        if($command->getEvent() === null)
-        {
-            $uniqid = uniqid('', false);
-            $errorsString = sprintf(
-                'Not found event id in class: %s',
-                $command::class
-            );
-            $this->logger->error($uniqid.': '.$errorsString);
+        $this->flush();
 
-            return $uniqid;
-        }
-
-
-        /**
-         * Получаем событие
-         */
-        $Event = $this->entityManager->getRepository(Entity\Event\PaymentEvent::class)->find(
-            $command->getEvent()
+        /* Отправляем событие в шину  */
+        $this->messageDispatch->dispatch(
+            message: new PaymentMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
+            transport: 'payment'
         );
 
-        if($Event === null)
-        {
-            $uniqid = uniqid('', false);
-            $errorsString = sprintf(
-                'Not found %s by id: %s',
-                Entity\Event\PaymentEvent::class,
-                $command->getEvent()
-            );
-            $this->logger->error($uniqid.': '.$errorsString);
-
-            return $uniqid;
-        }
-
-
-        /* Применяем изменения к событию */
-        $Event->setEntity($command);
-        $this->entityManager->persist($Event);
-
-
-        /**
-         * Получаем корень агрегата
-         */
-        $Main = $this->entityManager->getRepository(Entity\Payment::class)->findOneBy(
-            ['event' => $command->getEvent()]
-        );
-
-        if(empty($Main))
-        {
-            $uniqid = uniqid('', false);
-            $errorsString = sprintf(
-                'Not found %s by event: %s',
-                Entity\Payment::class,
-                $command->getEvent()
-            );
-            $this->logger->error($uniqid.': '.$errorsString);
-
-            return $uniqid;
-        }
-
-
-        /**
-         * Валидация Event
-         */
-
-        $errors = $this->validator->validate($Event);
-
-        if(count($errors) > 0)
-        {
-            /** Ошибка валидации */
-            $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [self::class.':'.__LINE__]);
-
-            return $uniqid;
-        }
-
-
-        /* Удаляем корень агрегата */
-        $this->entityManager->remove($Main);
-
-        $this->entityManager->flush();
-
-        return $Main;
+        return $this->main;
 
     }
-
 }
