@@ -1,0 +1,53 @@
+{% trans_default_domain 'admin.payment' %}
+
+
+<div class="card">
+	<div class="card-body">
+		<div class="d-flex gap-2 align-items-end">
+			
+			{{ form_row(field.DeleteField, {
+				
+				label: '<span class="svg-icon svg-icon-2 text-nowrap">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                                <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor"></rect>
+                                                <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor"></rect>
+                                            ',
+				attr:
+				{
+					class: 'btn-outline-danger btn-sm del-item-field border-0',
+					'data-section' : '__category_section__'
+				}
+			}) | raw }}
+			
+			<div class="w-25">
+				{{ form_row(field.sort, { label : 'sort'|trans({}, 'core'), value: '__FIELD_SORT__' }) }}
+			</div>
+			<div class="w-100">
+				{{ form_row(field.type, { label : 'Тип поля', placeholder: 'Выберите поле из списка',  attr: { 'data-select' : 'select2' }  })  }}
+			</div>
+			
+			{{ form_row(field.required, { attr: { 'checked' : true } }) | raw }}
+			
+		</div>
+		
+		
+		{# <div class="d-flex gap-2 align-items-end">
+			
+			
+			
+			<strong class='mb-3 me-3'>Отображение:</strong>
+			
+			
+			{{ form_row(field.name, { label : 'название' }) | raw }}
+			{{ form_row(field.card, { label : 'превью' }) | raw }}
+			{{ form_row(field.public, { label : 'детали', attr: { 'checked' : true }}) | raw }}
+			{{ form_row(field.filter, { label : 'фильтр' }) | raw }}
+		
+		</div> #}
+		
+		
+		
+		{{ include(_self|replace({ "prototype.field.html.twig": "trans/prototype.field.trans.html.twig" }), { trans_prototype : field.translate.vars.prototype }) }}
+	
+	</div>
+</div>

@@ -1,0 +1,51 @@
+{% trans_default_domain 'admin.payment' %}
+
+
+{% if form.translate.count > 1 %}
+	
+	<ul class="nav nav-pills gap-3 mb-3" id="nav-{{ form.translate.vars.id }}" role="tablist">
+		
+		{% for translate in form.translate %}
+			<li class="nav-item" role="presentation">
+				
+				<button class="btn fw-bolder nav-link{{ app.request.locale == translate.vars.value.local? ' active' : '' }}"
+
+						type="button"
+						title="{{ translate.vars.value.local|trans({}, 'core') }}"
+						role="tab"
+						
+						id="nav-{{ form.translate.vars.id }}-{{ translate.vars.value.local }}-tab"
+						data-bs-target="#nav-{{ form.translate.vars.id }}-{{ translate.vars.value.local }}"
+						data-bs-toggle="tab"
+				>
+					<small class="text-uppercase px-3">{{ translate.vars.value.local|trans({}, 'core') }}</small>
+				</button>
+			</li>
+		
+		{% endfor %}
+	</ul>
+
+{% endif %}
+
+<div class="tab-content" id="nav-{{ form.translate.vars.id }}Content">
+	
+	{% for translate in form.translate %}
+		
+		<div class="tab-pane fade{{ app.request.locale == translate.vars.value.local? ' show active' : '' }}"
+				role="tabpanel"
+				id="nav-{{ form.translate.vars.id }}-{{ translate.vars.value.local }}"
+		>
+			
+			{{ form_row(translate.local) }}
+			
+			{# Название способа оплаты #}
+			{{ form_row(translate.name, { label : 'admin.form.label.trans.name'|trans, attr: { 'data-lang' : translate.vars.id ~ "_"~translate.vars.value.local  }  }) }}
+			
+			{# Краткое описание #}
+			{{ form_row(translate.description, { label : 'admin.form.label.trans.desc'|trans }) }}
+		</div>
+	{% endfor %}
+
+</div>
+
+
