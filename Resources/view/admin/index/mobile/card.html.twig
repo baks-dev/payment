@@ -1,0 +1,88 @@
+{% trans_default_domain('admin.payment') %}
+
+<tr class="vertical-middle">
+	
+	
+	<td class="text-nowrap">
+		{# Пользовательское меню #}
+		{{ include(_self|replace({ "card.html.twig": "_usecase.html.twig" })) }}
+	</td>
+	
+	
+	<td class="text-center">
+		{{ item.payment_sort }}
+	</td>
+	
+	
+	<td class="text-center">
+		{% if item.payment_active %}
+			<span class="badge text-bg-success">Активный</span>
+		{% else %}
+			<span class="badge text-bg-danger">Отключен</span>
+		{% endif %}
+	</td>
+	
+	<td class="w-100">
+		
+		<div class="w-100 d-flex align-items-center gap-5">
+
+			{# Обложка  #}
+			{% set image_path = '/assets/img/blank.svg' %}
+
+			{% if item.payment_cover_ext is defined and item.payment_cover_ext is not null %}
+				{% set img_host =  item.payment_cover_cdn == true  ? CDN_HOST : '' %}
+				{% set img_dir = item.payment_cover_name %}
+				{% set img_file = (img_host is empty ? '/image.' : '/small.') ~ item.payment_cover_ext %}
+				{% set image_path = img_host ~ img_dir ~ img_file %}
+			{% endif %}
+
+
+			{% if is_granted(ROLE~'_EDIT') or is_granted('ROLE_ADMIN') %}
+				<a href="{{ path('payment:admin.newedit.edit', { id: item.event }) }}" class="pe-3">
+					<div class="rounded-3 bg-contain lazy p-1" style="width: 50px; height: 50px;"
+							data-bg="{{ image_path }}">
+					</div>
+				</a>
+			{% else %}
+				<div class="rounded-3 bg-contain lazy p-1" style="width: 50px; height: 50px;"
+						data-bg="{{ image_path }}">
+				</div>
+			{% endif %}
+			
+			
+			<div class="ms-0" style="min-width: 185px;">
+				
+				{% if is_granted(ROLE~'_EDIT') or is_granted('ROLE_ADMIN') %}
+					{# Название #}
+					<a href="{{ path('payment:admin.newedit.edit', {id: item.event }) }}"
+							class="text-decoration-none"
+					>{{ item.payment_name }}</a>
+				{% else %}
+					{{ item.payment_name }}
+				{% endif %}
+				
+				{# Описание #}
+				<div class="text-muted">
+					{{ string_width(item.payment_description, 150)|raw }}
+				</div>
+			
+			</div>
+		</div>
+	
+	
+	</td>
+	
+	<td class="text-center">
+		{% if item.type_profile_name %}
+			<span class="badge text-bg-warning">{{ item.type_profile_name }}</span>
+			
+			
+		{% else %}
+			<span class="badge text-bg-light">Доступно всем</span>
+			
+		{% endif %}
+		
+		
+	</td>
+
+</tr>
