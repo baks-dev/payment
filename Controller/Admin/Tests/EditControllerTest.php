@@ -27,10 +27,11 @@ use BaksDev\Payment\Entity\Payment;
 use BaksDev\Payment\Type\Event\PaymentEventUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/** @group payment */
+#[Group('payment')]
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
 {
