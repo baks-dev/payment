@@ -23,9 +23,6 @@
 
 namespace BaksDev\Payment\Entity\Cover;
 
-use BaksDev\Payment\Type\Cover\PaymentCoverUid;
-use BaksDev\Payment\Type\Event\PaymentEventUid;
-
 interface PaymentCoverInterface
 {
     public function getName(): ?string;

@@ -39,101 +39,101 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PaymentForm extends AbstractType
 {
-	private TypeProfileChoiceInterface $profileChoice;
-	
-	
-	public function __construct(TypeProfileChoiceInterface $profileChoice) {
-		$this->profileChoice = $profileChoice;
-	}
-	
-	
-	public function buildForm(FormBuilderInterface $builder, array $options) : void
-	{
-		
-		$profileChoice = $this->profileChoice->getActiveTypeProfileChoice();
-		
-		$builder
-			->add('type', ChoiceType::class, [
-				'choices' => $profileChoice,
-				'choice_value' => function(?TypeProfileUid $type) {
-					return $type?->getValue();
-				},
-				'choice_label' => function(TypeProfileUid $type) {
-					return $type->getOption();
-				},
-				'label' => false,
-				'expanded' => false,
-				'multiple' => false,
-				'required' => false
-			])
-		;
-		
-		/** Обложка способа оплаты */
-		$builder->add('cover', Cover\PaymentCoverForm::class);
-		
-		/** Настройки локали службы доставки */
-		$builder->add('translate', CollectionType::class, [
-			'entry_type' => Trans\PaymentTransForm::class,
-			'entry_options' => ['label' => false],
-			'label' => false,
-			'by_reference' => false,
-			'allow_delete' => true,
-			'allow_add' => true,
-			'prototype_name' => '__payment_translate__',
-		]);
-		
-		
-		/** Настройки локали службы доставки */
-		$builder->add('field', CollectionType::class, [
-			'entry_type' => Fields\PaymentFieldForm::class,
-			'entry_options' => ['label' => false],
-			'label' => false,
-			'by_reference' => false,
-			'allow_delete' => true,
-			'allow_add' => true,
-			'prototype_name' => '__payment_field__',
-		]);
-		
-		
-		/** Сортировка поля в секции */
-		$builder->add
-		(
-			'sort',
-			IntegerType::class,
-			[
-				'label' => false,
-				'attr' => ['min' => 0, 'max' => 999],
-			]
-		);
-		
-		
-		/** Флаг активности */
-		
-		$builder->add
-		(
-			'active',
-			CheckboxType::class,
-			[
-				'label' => false,
-				'required' => false,
-			]
-		);
-		
-		
-		/* Сохранить ******************************************************/
-		$builder->add(
-			'payment',
-			SubmitType::class,
-			['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
-		);
-	}
-	
-	
-	public function configureOptions(OptionsResolver $resolver) : void
-	{
-		$resolver->setDefaults([
-			'data_class' => PaymentDTO::class,
-		]);
-	}
-	
+    private TypeProfileChoiceInterface $profileChoice;
+
+
+    public function __construct(TypeProfileChoiceInterface $profileChoice)
+    {
+        $this->profileChoice = $profileChoice;
+    }
+
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+
+        $profileChoice = $this->profileChoice->getActiveTypeProfileChoice();
+
+        $builder
+            ->add('type', ChoiceType::class, [
+                'choices' => $profileChoice,
+                'choice_value' => function(?TypeProfileUid $type) {
+                    return $type?->getValue();
+                },
+                'choice_label' => function(TypeProfileUid $type) {
+                    return $type->getOption();
+                },
+                'label' => false,
+                'expanded' => false,
+                'multiple' => false,
+                'required' => false,
+            ]);
+
+        /** Обложка способа оплаты */
+        $builder->add('cover', Cover\PaymentCoverForm::class);
+
+        /** Настройки локали службы доставки */
+        $builder->add('translate', CollectionType::class, [
+            'entry_type' => Trans\PaymentTransForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__payment_translate__',
+        ]);
+
+
+        /** Настройки локали службы доставки */
+        $builder->add('field', CollectionType::class, [
+            'entry_type' => Fields\PaymentFieldForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__payment_field__',
+        ]);
+
+
+        /** Сортировка поля в секции */
+        $builder->add
+        (
+            'sort',
+            IntegerType::class,
+            [
+                'label' => false,
+                'attr' => ['min' => 0, 'max' => 999],
+            ],
+        );
+
+
+        /** Флаг активности */
+
+        $builder->add
+        (
+            'active',
+            CheckboxType::class,
+            [
+                'label' => false,
+                'required' => false,
+            ],
+        );
+
+
+        /* Сохранить ******************************************************/
+        $builder->add(
+            'payment',
+            SubmitType::class,
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']],
+        );
+    }
+
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => PaymentDTO::class,
+        ]);
+    }
+
 }

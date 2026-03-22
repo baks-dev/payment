@@ -25,69 +25,69 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\UseCase\Admin\NewEdit\Fields\Trans;
 
+use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Payment\Entity\Fields\Trans\PaymentFieldTransInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
-use BaksDev\Core\Type\Locale\Locale;
-use Doctrine\Common\Collections\ArrayCollection;
 
 final class PaymentFieldTransDTO implements PaymentFieldTransInterface
 {
-	
-	/** Локаль */
-	#[Assert\NotBlank]
-	private readonly Locale $local;
-	
-	/** Название  */
-	#[Assert\NotBlank]
-	private ?string $name;
-	
-	/** Краткое описание */
-	private ?string $description = null;
-	
-	
-	/** Локаль */
-	
-	public function getLocal() : Locale
-	{
-		return $this->local;
-	}
-	
-	
-	public function setLocal(Locale $local) : void
-	{
-		if(!(new ReflectionProperty(self::class, 'local'))->isInitialized($this))
-		{
-			$this->local = $local;
-		}
-	}
-	
-	
-	/** Название продукта  */
-	
-	public function getName(): string
-	{
-		return $this->name;
-	}
-	
-	
-	public function setName(?string $name) : void
-	{
-		$this->name = $name;
-	}
-	
-	
-	/** Краткое описание */
-	
-	public function getDescription() : ?string
-	{
-		return $this->description;
-	}
-	
-	
-	public function setDescription(?string $description) : void
-	{
-		$this->description = $description;
-	}
-	
+
+    /** Локаль */
+    #[Assert\NotBlank]
+    private readonly Locale $local;
+
+    /** Название  */
+    #[Assert\NotBlank]
+    private ?string $name;
+
+    /** Краткое описание */
+    private ?string $description = null;
+
+
+    /** Локаль */
+
+    public function getLocal(): Locale
+    {
+        return $this->local;
+    }
+
+
+    public function setLocal(Locale $local): void
+    {
+        if(!(new ReflectionProperty(self::class, 'local'))->isInitialized($this))
+        {
+            $this->local = $local;
+        }
+    }
+
+
+    /** Название продукта  */
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+
+    /** Краткое описание */
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
 }

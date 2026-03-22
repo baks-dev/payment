@@ -4,8 +4,8 @@
 {% extends Template('/admin/base.html.twig') %}
 
 {% block title %}
-	{# Добавить продукция #}
-	{{ 'admin.page.new'|trans }}
+    {# Добавить продукция #}
+    {{ 'admin.page.new'|trans }}
 {% endblock %}
 
 
@@ -17,8 +17,8 @@
 
 {# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
 {% block content %}
-	
-	{{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }}
+
+    {{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }}
 {% endblock %}
 
 

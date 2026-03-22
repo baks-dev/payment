@@ -30,15 +30,15 @@ use Doctrine\DBAL\Types\Types;
 
 final class PaymentFieldType extends UidType
 {
-	public function getClassType(): string
-	{
-		return PaymentFieldUid::class;
-	}
-	
-	
-	public function getName(): string
-	{
+    public function getClassType(): string
+    {
+        return PaymentFieldUid::class;
+    }
+
+
+    public function getName(): string
+    {
         return PaymentFieldUid::TYPE;
-	}
-	
+    }
+
 }

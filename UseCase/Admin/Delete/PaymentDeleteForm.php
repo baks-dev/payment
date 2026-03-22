@@ -32,24 +32,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PaymentDeleteForm extends AbstractType
 {
-	
-	public function buildForm(FormBuilderInterface $builder, array $options) : void
-	{
-		
-		/* Сохранить ******************************************************/
-		$builder->add(
-			'payment_delete',
-			SubmitType::class,
-			['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
-		);
-	}
-	
-	
-	public function configureOptions(OptionsResolver $resolver) : void
-	{
-		$resolver->setDefaults([
-			'data_class' => PaymentDeleteDTO::class,
-		]);
-	}
-	
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+
+        /* Сохранить ******************************************************/
+        $builder->add(
+            'payment_delete',
+            SubmitType::class,
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-danger']],
+        );
+    }
+
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => PaymentDeleteDTO::class,
+        ]);
+    }
+
 }

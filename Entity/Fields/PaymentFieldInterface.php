@@ -25,5 +25,5 @@ namespace BaksDev\Payment\Entity\Fields;
 
 interface PaymentFieldInterface
 {
-	
+
 }

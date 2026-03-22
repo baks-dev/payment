@@ -46,14 +46,15 @@ final class DeleteController extends AbstractController
         Request $request,
         #[MapEntity] Entity\Event\PaymentEvent $Event,
         PaymentDeleteHandler $handler,
-    ): Response {
+    ): Response
+    {
         $PaymentDeleteDTO = new PaymentDeleteDTO();
         $Event->getDto($PaymentDeleteDTO);
 
         $form = $this->createForm(
             PaymentDeleteForm::class,
             $PaymentDeleteDTO,
-            ['action' => $this->generateUrl('payment:admin.delete', ['id' => $PaymentDeleteDTO->getEvent()])]
+            ['action' => $this->generateUrl('payment:admin.delete', ['id' => $PaymentDeleteDTO->getEvent()])],
         );
         $form->handleRequest($request);
 
@@ -68,7 +69,7 @@ final class DeleteController extends AbstractController
                 $this->addFlash(
                     'admin.page.delete',
                     'admin.success.delete',
-                    'admin.payment'
+                    'admin.payment',
                 );
 
                 return $this->redirectToRoute('payment:admin.index');
@@ -78,7 +79,7 @@ final class DeleteController extends AbstractController
                 'admin.page.delete',
                 'admin.danger.delete',
                 'admin.payment',
-                $Payment
+                $Payment,
             );
 
             return $this->redirectToRoute('payment:admin.index', status: 400);
@@ -88,7 +89,7 @@ final class DeleteController extends AbstractController
             [
                 'form' => $form->createView(),
                 'name' => $Event->getNameByLocale($this->getLocale()), // название согласно локали
-            ]
+            ],
         );
     }
 }

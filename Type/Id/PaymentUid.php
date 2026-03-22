@@ -106,7 +106,7 @@ final class PaymentUid extends Uid
             get_declared_classes(),
             static function($className) {
                 return in_array(TypePaymentInterface::class, class_implements($className), true);
-            }
+            },
         );
     }
 }

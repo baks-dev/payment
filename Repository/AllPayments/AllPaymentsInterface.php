@@ -28,6 +28,6 @@ use BaksDev\Core\Services\Paginator\PaginatorInterface;
 
 interface AllPaymentsInterface
 {
-	public function fetchAllPaymentsAssociative(SearchDTO $search) : PaginatorInterface;
-	
+    public function fetchAllPaymentsAssociative(SearchDTO $search): PaginatorInterface;
+
 }

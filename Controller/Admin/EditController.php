@@ -47,7 +47,8 @@ final class EditController extends AbstractController
         Request $request,
         #[MapEntity] PaymentEvent $Event,
         PaymentHandler $paymentHandler,
-    ): Response {
+    ): Response
+    {
         $PaymentDTO = new PaymentDTO();
         $Event->getDto($PaymentDTO);
 

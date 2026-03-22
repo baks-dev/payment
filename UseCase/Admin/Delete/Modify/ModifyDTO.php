@@ -19,10 +19,10 @@
 namespace BaksDev\Payment\UseCase\Admin\Delete\Modify;
 
 use BaksDev\Core\Type\Modify\Modify\ModifyActionDelete;
-use BaksDev\Payment\Entity\Modify\PaymentModifyInterface;
-use BaksDev\Core\Type\Modify\ModifyAction;
 use BaksDev\Core\Type\Modify\Modify\ModifyActionNew;
 use BaksDev\Core\Type\Modify\Modify\ModifyActionUpdate;
+use BaksDev\Core\Type\Modify\ModifyAction;
+use BaksDev\Payment\Entity\Modify\PaymentModifyInterface;
 
 final class ModifyDTO implements PaymentModifyInterface
 {

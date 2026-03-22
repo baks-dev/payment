@@ -29,7 +29,7 @@ use BaksDev\Payment\BaksDevPaymentBundle;
 use BaksDev\Payment\Repository\FieldByPaymentChoice\FieldByPaymentChoiceRepository;
 use BaksDev\Payment\Repository\PaymentByTypeProfileChoice\PaymentByTypeProfileChoiceRepository;
 
-return static function (ContainerConfigurator $configurator) {
+return static function(ContainerConfigurator $configurator) {
     $services = $configurator->services()
         ->defaults()
         ->autowire()
@@ -48,17 +48,17 @@ return static function (ContainerConfigurator $configurator) {
 
     $services->load(
         $NAMESPACE.'Type\Id\Choice\\',
-        $PATH.implode(DIRECTORY_SEPARATOR, ['Type', 'Id', 'Choice'])
+        $PATH.implode(DIRECTORY_SEPARATOR, ['Type', 'Id', 'Choice']),
     );
 
     $services->alias(
         PaymentByTypeProfileChoiceInterface::class.' $paymentChoice',
-        PaymentByTypeProfileChoiceRepository::class
+        PaymentByTypeProfileChoiceRepository::class,
     );
 
     $services->alias(
         FieldByPaymentChoiceInterface::class.' $paymentFields',
-        FieldByPaymentChoiceRepository::class
+        FieldByPaymentChoiceRepository::class,
     );
 
 

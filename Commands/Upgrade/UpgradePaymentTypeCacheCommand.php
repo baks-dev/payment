@@ -52,7 +52,8 @@ class UpgradePaymentTypeCacheCommand extends Command
         private readonly ExistTypePaymentInterface $existTypePayment,
         private readonly PaymentHandler $paymentHandler,
         private readonly TranslatorInterface $translator,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -93,7 +94,7 @@ class UpgradePaymentTypeCacheCommand extends Command
             if(!$handle instanceof Payment)
             {
                 $io->error(
-                    sprintf('Ошибка %s при добавлении способа оплаты', $handle)
+                    sprintf('Ошибка %s при добавлении способа оплаты', $handle),
                 );
 
                 return Command::FAILURE;

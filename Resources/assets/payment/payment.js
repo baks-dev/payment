@@ -22,17 +22,18 @@
 
 /* кнопка Добавить коллекцию */
 
-let $addButtonField = document.getElementById('field_addCollection');
+let $addButtonField = document.getElementById("field_addCollection");
 
-if ($addButtonField)
+if($addButtonField)
 {
     /* Блок для новой коллекции */
-    let $blockCollection = document.getElementById('field_collection');
+    let $blockCollection = document.getElementById("field_collection");
 
-    if ($blockCollection) {
+    if($blockCollection)
+    {
 
         /* Добавляем новую коллекцию */
-        $addButtonField.addEventListener('click', function ()
+        $addButtonField.addEventListener("click", function()
         {
             /* получаем прототип коллекции  */
             let newForm = this.dataset.prototype;
@@ -40,7 +41,7 @@ if ($addButtonField)
 
 
             /* Замена '__name__' в HTML-коде прототипа на
-            вместо этого будет число, основанное на том, сколько коллекций */
+             вместо этого будет число, основанное на том, сколько коллекций */
             newForm = newForm.replace(/__payment_field__/g, index);
 
             newForm = newForm.replace(/__FIELD_SORT__/g, index * 100 + 100);
@@ -50,9 +51,9 @@ if ($addButtonField)
 
 
             /* Вставляем новую коллекцию */
-            let div = document.createElement('div');
-            div.id = 'item_payment_form_field_' + index;
-            div.classList.add('mb-3');
+            let div = document.createElement("div");
+            div.id = "item_payment_form_field_" + index;
+            div.classList.add("mb-3");
 
 
             div.innerHTML = newForm;
@@ -60,9 +61,9 @@ if ($addButtonField)
 
 
             /* Плавная прокрутка к элементу */
-            div.scrollIntoView({block: "center", inline: "center", behavior: "smooth"});
+            div.scrollIntoView({block : "center", inline : "center", behavior : "smooth"});
 
-            (div.querySelector('.del-item-field'))?.addEventListener('click', deleteField);
+            (div.querySelector(".del-item-field"))?.addEventListener("click", deleteField);
 
             // let field = document.getElementById('field-collection-' + index);
             // field.innerHTML = field.innerHTML.replace(/__FIELDS__/g, '0')
@@ -79,7 +80,6 @@ if ($addButtonField)
             //deleteField(div);
 
 
-
             /* Увеличиваем data-index на 1 после вставки новой коллекции */
             this.dataset.index = (index + 1).toString();
 
@@ -91,10 +91,12 @@ if ($addButtonField)
 }
 
 
-document.querySelectorAll('.del-item-field').forEach(function (item) {
-    item.addEventListener('click', deleteField);
+document.querySelectorAll(".del-item-field").forEach(function(item)
+{
+    item.addEventListener("click", deleteField);
 });
 
-function deleteField() {
+function deleteField()
+{
     document.getElementById(this.dataset.delete).remove();
 }

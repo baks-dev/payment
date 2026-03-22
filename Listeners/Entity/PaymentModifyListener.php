@@ -38,21 +38,22 @@ final class PaymentModifyListener
 {
     private RequestStack $request;
     private TokenStorageInterface $token;
-    
+
     public function __construct(
-      RequestStack $request,
-      TokenStorageInterface $token,
+        RequestStack $request,
+        TokenStorageInterface $token,
     )
     {
         $this->request = $request;
         $this->token = $token;
     }
-    
-    public function prePersist(PaymentModify $data, LifecycleEventArgs $event) : void
+
+    public function prePersist(PaymentModify $data, LifecycleEventArgs $event): void
     {
         $token = $this->token->getToken();
 
-        if ($token) {
+        if($token)
+        {
 
             $data->setUsr($token->getUser());
 
@@ -63,16 +64,16 @@ final class PaymentModifyListener
                 $data->setUsr($originalUser);
             }
         }
-        
+
         /* Если пользователь не из консоли */
         if($this->request->getCurrentRequest())
         {
-    
+
             $data->upModifyAgent(
-              new IpAddress($this->request->getCurrentRequest()->getClientIp()), /* Ip */
-              $this->request->getCurrentRequest()->headers->get('User-Agent') /* User-Agent */
+                new IpAddress($this->request->getCurrentRequest()->getClientIp()), /* Ip */
+                $this->request->getCurrentRequest()->headers->get('User-Agent'), /* User-Agent */
             );
         }
     }
-    
+
 }

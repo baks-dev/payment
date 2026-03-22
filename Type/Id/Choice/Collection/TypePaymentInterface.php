@@ -28,12 +28,12 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('baks.payment.type')]
 interface TypePaymentInterface
 {
-    public function __toString(): string;
-
-    public function getValue(): string;
-
     public static function priority(): int;
 
     public static function equals(mixed $uid): bool;
+
+    public function __toString(): string;
+
+    public function getValue(): string;
 
 }

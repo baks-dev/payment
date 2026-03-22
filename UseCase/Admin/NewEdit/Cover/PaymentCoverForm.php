@@ -34,27 +34,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PaymentCoverForm extends AbstractType
 {
-	
-	public function buildForm(FormBuilderInterface $builder, array $options) : void
-	{
-		$builder
-			->add(
-				'file', FileType::class,
-				[
-					'label' => false,
-					'required' => false,
-					'attr' => ['accept' => ".png, .jpg, .jpeg, .webp, .gif"],
-				]
-			)
-		;
-	}
-	
-	
-	public function configureOptions(OptionsResolver $resolver) : void
-	{
-		$resolver->setDefaults([
-			'data_class' => PaymentCoverDTO::class,
-		]);
-	}
-	
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add(
+                'file', FileType::class,
+                [
+                    'label' => false,
+                    'required' => false,
+                    'attr' => ['accept' => ".png, .jpg, .jpeg, .webp, .gif"],
+                ],
+            );
+    }
+
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => PaymentCoverDTO::class,
+        ]);
+    }
+
 }

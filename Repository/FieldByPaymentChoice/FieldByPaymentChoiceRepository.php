@@ -60,7 +60,7 @@ final class FieldByPaymentChoiceRepository implements FieldByPaymentChoiceInterf
             ->from(
                 PaymentEntity\Payment::class,
                 'payment',
-                'payment.id'
+                'payment.id',
             )
             ->where('payment.id = :payment')
             ->setParameter('payment', $payment, PaymentUid::TYPE);
@@ -69,21 +69,21 @@ final class FieldByPaymentChoiceRepository implements FieldByPaymentChoiceInterf
             PaymentEntity\Event\PaymentEvent::class,
             'event',
             'WITH',
-            'event.id = payment.event'
+            'event.id = payment.event',
         );
 
         $qb->join(
             PaymentEntity\Fields\PaymentField::class,
             'field',
             'WITH',
-            'field.event = event.id'
+            'field.event = event.id',
         );
 
         $qb->leftJoin(
             PaymentEntity\Fields\Trans\PaymentFieldTrans::class,
             'trans',
             'WITH',
-            'trans.field = field.id AND trans.local = :local'
+            'trans.field = field.id AND trans.local = :local',
         );
 
 

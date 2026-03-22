@@ -25,87 +25,86 @@ declare(strict_types=1);
 
 namespace BaksDev\Payment\UseCase\Admin\NewEdit\Trans;
 
+use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Payment\Entity\Trans\PaymentTransInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
-use BaksDev\Core\Type\Locale\Locale;
-use Doctrine\Common\Collections\ArrayCollection;
 
 final class PaymentTransDTO implements PaymentTransInterface
 {
-	
-	/** Локаль */
-	#[Assert\NotBlank]
-	private readonly Locale $local;
-	
-	/** Название  */
-	#[Assert\NotBlank]
-	private ?string $name;
-	
-	/** Краткое описание */
-	private ?string $preview = null;
-	
-	/** Детальное описание */
-	private ?string $description = null;
-	
-	
-	
-	/** Локаль */
-	
-	public function getLocal() : Locale
-	{
-		return $this->local;
-	}
-	
-	
-	public function setLocal(Locale $local) : void
-	{
-		if(!(new ReflectionProperty(self::class, 'local'))->isInitialized($this))
-		{
-			$this->local = $local;
-		}
-	}
-	
-	
-	/** Название продукта  */
-	
-	public function getName(): string
-	{
-		return $this->name;
-	}
-	
-	
-	public function setName(?string $name) : void
-	{
-		$this->name = $name;
-	}
-	
-	
-	/** Краткое описание */
-	
-	public function getPreview() : ?string
-	{
-		return $this->preview;
-	}
-	
-	
-	public function setPreview(?string $preview) : void
-	{
-		$this->preview = $preview;
-	}
-	
-	
-	/** Детальное описание */
-	
-	public function getDescription() : ?string
-	{
-		return $this->description;
-	}
-	
-	
-	public function setDescription(?string $description) : void
-	{
-		$this->description = $description;
-	}
-	
+
+    /** Локаль */
+    #[Assert\NotBlank]
+    private readonly Locale $local;
+
+    /** Название  */
+    #[Assert\NotBlank]
+    private ?string $name;
+
+    /** Краткое описание */
+    private ?string $preview = null;
+
+    /** Детальное описание */
+    private ?string $description = null;
+
+
+    /** Локаль */
+
+    public function getLocal(): Locale
+    {
+        return $this->local;
+    }
+
+
+    public function setLocal(Locale $local): void
+    {
+        if(!(new ReflectionProperty(self::class, 'local'))->isInitialized($this))
+        {
+            $this->local = $local;
+        }
+    }
+
+
+    /** Название продукта  */
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+
+    /** Краткое описание */
+
+    public function getPreview(): ?string
+    {
+        return $this->preview;
+    }
+
+
+    public function setPreview(?string $preview): void
+    {
+        $this->preview = $preview;
+    }
+
+
+    /** Детальное описание */
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
 }

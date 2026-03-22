@@ -36,7 +36,7 @@ use BaksDev\Payment\Type\Id\PaymentType;
 use BaksDev\Payment\Type\Id\PaymentUid;
 use Symfony\Config\DoctrineConfig;
 
-return static function (ContainerConfigurator $container, DoctrineConfig $doctrine) {
+return static function(ContainerConfigurator $container, DoctrineConfig $doctrine) {
 
     $doctrine->dbal()->type(PaymentUid::TYPE)->class(PaymentType::class);
     $doctrine->dbal()->type(PaymentEventUid::TYPE)->class(PaymentEventType::class);

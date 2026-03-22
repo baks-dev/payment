@@ -27,6 +27,6 @@ use BaksDev\Core\Type\Modify\ModifyAction;
 
 interface PaymentModifyInterface
 {
-	public function getAction() : ModifyAction;
-	
+    public function getAction(): ModifyAction;
+
 }

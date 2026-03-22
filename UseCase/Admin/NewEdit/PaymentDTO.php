@@ -94,15 +94,6 @@ final class PaymentDTO implements PaymentEventInterface
         return $this->payment;
     }
 
-
-    /** Перевод (настройки локали) способа оплаты */
-
-    public function setTranslate(ArrayCollection $trans): void
-    {
-        $this->translate = $trans;
-    }
-
-
     public function getTranslate(): ArrayCollection
     {
         /* Вычисляем расхождение и добавляем неопределенные локали */
@@ -116,6 +107,12 @@ final class PaymentDTO implements PaymentEventInterface
         return $this->translate;
     }
 
+    /** Перевод (настройки локали) способа оплаты */
+
+    public function setTranslate(ArrayCollection $trans): void
+    {
+        $this->translate = $trans;
+    }
 
     public function addTranslate(Trans\PaymentTransDTO $trans): void
     {

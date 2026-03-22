@@ -44,7 +44,8 @@ final class NewController extends AbstractController
     public function new(
         Request $request,
         PaymentHandler $paymentHandler
-    ): Response {
+    ): Response
+    {
 
         $PaymentDTO = new PaymentDTO();
 

@@ -55,8 +55,7 @@ final class ExistTypePaymentRepository implements ExistTypePaymentInterface
         $dbal
             ->from(Payment::class, 'payment')
             ->where('payment.id = :payment')
-            ->setParameter('payment', $payment, PaymentUid::TYPE)
-        ;
+            ->setParameter('payment', $payment, PaymentUid::TYPE);
 
         return $dbal->fetchExist();
     }

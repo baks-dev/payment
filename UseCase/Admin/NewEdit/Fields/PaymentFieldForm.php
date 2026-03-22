@@ -43,98 +43,97 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PaymentFieldForm extends AbstractType
 {
-	
-	private TranslatorInterface $translator;
-	
-	private FieldsChoice $fields;
-	
-	public function __construct(FieldsChoice $fields, TranslatorInterface $translator)
-	{
-		$this->translator = $translator;
-		$this->fields = $fields;
-	}
-	
-	public function buildForm(FormBuilderInterface $builder, array $options) : void
-	{
-		
-		/** Сортировка поля в секции */
-		$builder->add
-		(
-			'sort',
-			IntegerType::class,
-			[
-				'label' => false,
-				'attr' => ['min' => 0, 'max' => 999],
-			]
-		);
-		
-		
-		
-		/** Тип поля (input, select, textarea ....) */
-		$builder->add
-		(
-			'type',
-			ChoiceType::class,
-			[
-				'required' => false,
-				'choices' => $this->fields->getFields(),
-				'choice_value' => function($choice) {
-					return $choice instanceof FieldsChoiceInterface ? $choice?->type() : $choice;
-				},
-				'choice_label' => function($choice) {
-					return $this->translator->trans('label', domain: $choice->domain());
-				},
-			]
-		);
-		
-		$builder->get('type')->addModelTransformer(
-			new CallbackTransformer(
-				function($type) {
-					return $type; // instanceof FieldsChoiceInterface ? $type->type() : $type;
-				},
-				function($type) {
-					return $type instanceof FieldsChoiceInterface ? new InputField($type) : null;
-				}
-			)
-		);
-		
-		/** Обязательное к заполнению */
-		$builder->add('required', CheckboxType::class, [
-			'required' => false,
-		]);
-		
-		
-		/** Настройки локали полей для заполенния  */
-		$builder->add('translate', CollectionType::class, [
-			'entry_type' => Trans\PaymentFieldTransForm::class,
-			'entry_options' => ['label' => false],
-			'label' => false,
-			'by_reference' => false,
-			'allow_delete' => true,
-			'allow_add' => true,
-			'prototype_name' => '__field_translate__',
-		]);
-		
-		
-		$builder->add
-		(
-			'DeleteField',
-			ButtonType::class,
-			[
-				'label_html' => true,
-				'attr' =>
-					['class' => 'btn btn-sm btn-icon btn-light-danger del-item-field'],
-			]
-		);
-		
-	}
-	
-	
-	public function configureOptions(OptionsResolver $resolver) : void
-	{
-		$resolver->setDefaults([
-			'data_class' => PaymentFieldDTO::class,
-		]);
-	}
-	
+
+    private TranslatorInterface $translator;
+
+    private FieldsChoice $fields;
+
+    public function __construct(FieldsChoice $fields, TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+        $this->fields = $fields;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+
+        /** Сортировка поля в секции */
+        $builder->add
+        (
+            'sort',
+            IntegerType::class,
+            [
+                'label' => false,
+                'attr' => ['min' => 0, 'max' => 999],
+            ],
+        );
+
+
+        /** Тип поля (input, select, textarea ....) */
+        $builder->add
+        (
+            'type',
+            ChoiceType::class,
+            [
+                'required' => false,
+                'choices' => $this->fields->getFields(),
+                'choice_value' => function($choice) {
+                    return $choice instanceof FieldsChoiceInterface ? $choice?->type() : $choice;
+                },
+                'choice_label' => function($choice) {
+                    return $this->translator->trans('label', domain: $choice->domain());
+                },
+            ],
+        );
+
+        $builder->get('type')->addModelTransformer(
+            new CallbackTransformer(
+                function($type) {
+                    return $type; // instanceof FieldsChoiceInterface ? $type->type() : $type;
+                },
+                function($type) {
+                    return $type instanceof FieldsChoiceInterface ? new InputField($type) : null;
+                },
+            ),
+        );
+
+        /** Обязательное к заполнению */
+        $builder->add('required', CheckboxType::class, [
+            'required' => false,
+        ]);
+
+
+        /** Настройки локали полей для заполенния  */
+        $builder->add('translate', CollectionType::class, [
+            'entry_type' => Trans\PaymentFieldTransForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__field_translate__',
+        ]);
+
+
+        $builder->add
+        (
+            'DeleteField',
+            ButtonType::class,
+            [
+                'label_html' => true,
+                'attr' =>
+                    ['class' => 'btn btn-sm btn-icon btn-light-danger del-item-field'],
+            ],
+        );
+
+    }
+
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => PaymentFieldDTO::class,
+        ]);
+    }
+
 }

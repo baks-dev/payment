@@ -38,42 +38,39 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'payment')]
 class Payment
 {
-	/** ID */
-	#[ORM\Id]
-	#[ORM\Column(type: PaymentUid::TYPE)]
-	private PaymentUid $id;
-	
-	/** ID События */
-	#[ORM\Column(type: PaymentEventUid::TYPE, unique: true)]
-	private PaymentEventUid $event;
-	
-	
-	public function __construct(?PaymentUid $id = null)
-	{
-		$this->id = new PaymentUid($id);
-	}
+    /** ID */
+    #[ORM\Id]
+    #[ORM\Column(type: PaymentUid::TYPE)]
+    private PaymentUid $id;
+
+    /** ID События */
+    #[ORM\Column(type: PaymentEventUid::TYPE, unique: true)]
+    private PaymentEventUid $event;
+
+
+    public function __construct(?PaymentUid $id = null)
+    {
+        $this->id = new PaymentUid($id);
+    }
 
     public function __toString(): string
     {
         return (string) $this->id;
     }
-	
-	
-	public function getId() : PaymentUid
-	{
-		return $this->id;
-	}
-	
-	
-	public function getEvent() : PaymentEventUid
-	{
-		return $this->event;
-	}
-	
-	
-	public function setEvent(PaymentEventUid|PaymentEvent $event) : void
-	{
-		$this->event = $event instanceof PaymentEvent ? $event->getId() : $event;
-	}
-	
+
+    public function getEvent(): PaymentEventUid
+    {
+        return $this->event;
+    }
+
+    public function setEvent(PaymentEventUid|PaymentEvent $event): void
+    {
+        $this->event = $event instanceof PaymentEvent ? $event->getId() : $event;
+    }
+
+    public function getId(): PaymentUid
+    {
+        return $this->id;
+    }
+
 }

@@ -65,7 +65,7 @@ final class PaymentHandler extends AbstractHandler
         /* Отправляем событие в шину  */
         $this->messageDispatch->dispatch(
             message: new PaymentMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'payment'
+            transport: 'payment',
         );
 
         return $this->main;

@@ -33,119 +33,112 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class PaymentFieldDTO implements PaymentFieldInterface
 {
-	
-	/** Перевод (настройки локали) полей способа оплаты */
-	#[Assert\Valid]
-	private ArrayCollection $translate;
-	
-	
-	/** Тип поля (input, select, textarea ....)  */
-	#[Assert\NotBlank]
-	private InputField $type;
-	
-	/** Обязательное к заполнению */
-	private bool $required = true;
-	
-	/** Сортировка */
-	#[Assert\NotBlank]
-	private int $sort = 100;
-	
 
-	public function __construct()
-	{
-		$this->translate = new ArrayCollection();
-	}
-	
-	
-	/** Перевод (настройки локали) способа оплаты */
-	
-	public function setTranslate(ArrayCollection $trans) : void
-	{
-		$this->translate = $trans;
-	}
-	
-	
-	public function getTranslate() : ArrayCollection
-	{
-		/* Вычисляем расхождение и добавляем неопределенные локали */
-		foreach(Locale::diffLocale($this->translate) as $locale)
-		{
-			$PaymentFieldTransDTO = new Trans\PaymentFieldTransDTO;
-			$PaymentFieldTransDTO->setLocal($locale);
-			$this->addTranslate($PaymentFieldTransDTO);
-		}
-		
-		return $this->translate;
-	}
-	
-	
-	public function addTranslate(Trans\PaymentFieldTransDTO $trans) : void
-	{
+    /** Перевод (настройки локали) полей способа оплаты */
+    #[Assert\Valid]
+    private ArrayCollection $translate;
+
+
+    /** Тип поля (input, select, textarea ....)  */
+    #[Assert\NotBlank]
+    private InputField $type;
+
+    /** Обязательное к заполнению */
+    private bool $required = true;
+
+    /** Сортировка */
+    #[Assert\NotBlank]
+    private int $sort = 100;
+
+
+    public function __construct()
+    {
+        $this->translate = new ArrayCollection();
+    }
+
+    public function getTranslate(): ArrayCollection
+    {
+        /* Вычисляем расхождение и добавляем неопределенные локали */
+        foreach(Locale::diffLocale($this->translate) as $locale)
+        {
+            $PaymentFieldTransDTO = new Trans\PaymentFieldTransDTO;
+            $PaymentFieldTransDTO->setLocal($locale);
+            $this->addTranslate($PaymentFieldTransDTO);
+        }
+
+        return $this->translate;
+    }
+
+    /** Перевод (настройки локали) способа оплаты */
+
+    public function setTranslate(ArrayCollection $trans): void
+    {
+        $this->translate = $trans;
+    }
+
+    public function addTranslate(Trans\PaymentFieldTransDTO $trans): void
+    {
 
         if(empty($trans->getLocal()->getLocalValue()))
         {
             return;
         }
 
-		if(!$this->translate->contains($trans))
-		{
-			$this->translate->add($trans);
-		}
-	}
-	
-	
-	public function removeTranslate(Trans\PaymentFieldTransDTO $trans) : void
-	{
-		$this->translate->removeElement($trans);
-	}
-	
-	
-	
-	/** Тип поля (input, select, textarea ....)  */
-	
-	
-	public function getType() : InputField
-	{
-		return $this->type;
-	}
+        if(!$this->translate->contains($trans))
+        {
+            $this->translate->add($trans);
+        }
+    }
 
-	public function setType(InputField $type) : void
-	{
-		$this->type = $type;
-	}
-	
-	
-	/** Обязательное к заполнению */
-	
-	
-	public function getRequired() : bool
-	{
-		return $this->required;
-	}
-	
 
-	public function setRequired(bool $required) : void
-	{
-		$this->required = $required;
-	}
-	
-	
-	/** Сортирвока */
-	
-	
-	public function getSort() : int
-	{
-		return $this->sort;
-	}
-	
-	
-	public function setSort(int $sort) : void
-	{
-		$this->sort = $sort;
-	}
-	
-	
-	
-	
-	
+    public function removeTranslate(Trans\PaymentFieldTransDTO $trans): void
+    {
+        $this->translate->removeElement($trans);
+    }
+
+
+    /** Тип поля (input, select, textarea ....)  */
+
+
+    public function getType(): InputField
+    {
+        return $this->type;
+    }
+
+    public function setType(InputField $type): void
+    {
+        $this->type = $type;
+    }
+
+
+    /** Обязательное к заполнению */
+
+
+    public function getRequired(): bool
+    {
+        return $this->required;
+    }
+
+
+    public function setRequired(bool $required): void
+    {
+        $this->required = $required;
+    }
+
+
+    /** Сортирвока */
+
+
+    public function getSort(): int
+    {
+        return $this->sort;
+    }
+
+
+    public function setSort(int $sort): void
+    {
+        $this->sort = $sort;
+    }
+
+
 }

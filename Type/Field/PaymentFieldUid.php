@@ -34,65 +34,64 @@ final class PaymentFieldUid extends Uid
     public const string TEST = '0188a99b-91bb-7c7a-8f5b-644682d65bc7';
 
     public const string TYPE = 'payment_field';
-	
-	/**
-	 * @var mixed|null
-	 */
-	private mixed $attr;
-	
-	/**
-	 * @var mixed|null
-	 */
-	private mixed $option;
-	
-	/**
-	 * @var mixed|null
-	 */
-	private mixed $type;
-	
-	private bool $required = true;
-	
-	
-	public function __construct(
-		AbstractUid|self|string|null $value = null,
-		mixed $attr = null,
-		mixed $option = null,
-		mixed $type = null,
-		bool $required = true,
-	)
-	{
+
+    /**
+     * @var mixed|null
+     */
+    private mixed $attr;
+
+    /**
+     * @var mixed|null
+     */
+    private mixed $option;
+
+    /**
+     * @var mixed|null
+     */
+    private mixed $type;
+
+    private bool $required = true;
+
+
+    public function __construct(
+        AbstractUid|self|string|null $value = null,
+        mixed $attr = null,
+        mixed $option = null,
+        mixed $type = null,
+        bool $required = true,
+    )
+    {
         parent::__construct($value);
-		
-		$this->attr = $attr;
-		$this->option = $option;
-		$this->type = $type;
-		$this->required = $required;
-	}
-	
-	
 
-	public function getAttr(): mixed
-	{
-		return $this->attr;
-	}
-	
+        $this->attr = $attr;
+        $this->option = $option;
+        $this->type = $type;
+        $this->required = $required;
+    }
 
-	public function getOption(): mixed
-	{
-		return $this->option;
-	}
-	
 
-	public function getType(): mixed
-	{
-		return $this->type;
-	}
-	
+    public function getAttr(): mixed
+    {
+        return $this->attr;
+    }
 
-	public function getRequired() : bool
-	{
-		return $this->required;
-	}
-	
-	
+
+    public function getOption(): mixed
+    {
+        return $this->option;
+    }
+
+
+    public function getType(): mixed
+    {
+        return $this->type;
+    }
+
+
+    public function getRequired(): bool
+    {
+        return $this->required;
+    }
+
+
 }

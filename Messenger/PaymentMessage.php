@@ -31,44 +31,44 @@ use BaksDev\Payment\Type\Id\PaymentUid;
 
 final class PaymentMessage
 {
-	/** Идентификатор */
-	private PaymentUid $id;
-	
-	/** Идентификатор события */
-	private PaymentEventUid $event;
-	
-	/** Идентификатор предыдущего события */
-	private ?PaymentEventUid $last;
-	
-	public function __construct(PaymentUid $id, PaymentEventUid $event, ?PaymentEventUid $last = null)
-	{
-		$this->last = $last;
-		$this->id = $id;
-		$this->event = $event;
-	}
-	
-	
-	/** Идентификатор */
-	
-	public function getId() : PaymentUid
-	{
-		return $this->id;
-	}
-	
-	
-	/** Идентификатор события */
-	
-	public function getEvent() : PaymentEventUid
-	{
-		return $this->event;
-	}
-	
-	
-	/** Идентификатор предыдущего события */
-	
-	public function getLast() : ?PaymentEventUid
-	{
-		return $this->last;
-	}
-	
+    /** Идентификатор */
+    private PaymentUid $id;
+
+    /** Идентификатор события */
+    private PaymentEventUid $event;
+
+    /** Идентификатор предыдущего события */
+    private ?PaymentEventUid $last;
+
+    public function __construct(PaymentUid $id, PaymentEventUid $event, ?PaymentEventUid $last = null)
+    {
+        $this->last = $last;
+        $this->id = $id;
+        $this->event = $event;
+    }
+
+
+    /** Идентификатор */
+
+    public function getId(): PaymentUid
+    {
+        return $this->id;
+    }
+
+
+    /** Идентификатор события */
+
+    public function getEvent(): PaymentEventUid
+    {
+        return $this->event;
+    }
+
+
+    /** Идентификатор предыдущего события */
+
+    public function getLast(): ?PaymentEventUid
+    {
+        return $this->last;
+    }
+
 }

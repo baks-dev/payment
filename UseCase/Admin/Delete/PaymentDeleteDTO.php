@@ -31,29 +31,30 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class PaymentDeleteDTO implements PaymentEventInterface
 {
-	
-	/** Идентификатор события */
-	#[Assert\Uuid]
-	#[Assert\NotBlank]
-	private ?PaymentEventUid $id = null;
-	
-	#[Assert\Valid]
-	private Modify\ModifyDTO $modify;
-	
-	public function __construct() {
-		$this->modify = new Modify\ModifyDTO();
-	}
-	
-	
-	public function getEvent() : ?PaymentEventUid
-	{
-		return $this->id;
-	}
-	
-	
-	public function getModify() : Modify\ModifyDTO
-	{
-		return $this->modify;
-	}
-	
+
+    /** Идентификатор события */
+    #[Assert\Uuid]
+    #[Assert\NotBlank]
+    private ?PaymentEventUid $id = null;
+
+    #[Assert\Valid]
+    private Modify\ModifyDTO $modify;
+
+    public function __construct()
+    {
+        $this->modify = new Modify\ModifyDTO();
+    }
+
+
+    public function getEvent(): ?PaymentEventUid
+    {
+        return $this->id;
+    }
+
+
+    public function getModify(): Modify\ModifyDTO
+    {
+        return $this->modify;
+    }
+
 }

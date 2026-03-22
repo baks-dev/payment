@@ -72,7 +72,7 @@ final class AllPaymentsRepository implements AllPaymentsInterface
                 'payment',
                 PaymentEvent::class,
                 'event',
-                'event.id = payment.event'
+                'event.id = payment.event',
             );
 
         $qb
@@ -82,7 +82,7 @@ final class AllPaymentsRepository implements AllPaymentsInterface
                 'event',
                 PaymentTrans::class,
                 'trans',
-                'trans.event = event.id AND trans.local = :local'
+                'trans.event = event.id AND trans.local = :local',
             );
 
 
@@ -96,12 +96,12 @@ final class AllPaymentsRepository implements AllPaymentsInterface
 					CONCAT ( '/upload/".$qb->table(PaymentCover::class)."' , '/', cover.name)
 			   ELSE NULL
 			END AS payment_cover_name
-		"
+		",
             )
             ->leftJoin('event',
                 PaymentCover::class,
                 'cover',
-                'cover.event = event.id'
+                'cover.event = event.id',
             );
 
 
@@ -110,7 +110,7 @@ final class AllPaymentsRepository implements AllPaymentsInterface
         $qb->leftJoin('event',
             TypeProfile::class,
             'type_profile',
-            'event.type IS NOT NULL AND type_profile.id = event.type'
+            'event.type IS NOT NULL AND type_profile.id = event.type',
         );
 
         $qb
@@ -119,7 +119,7 @@ final class AllPaymentsRepository implements AllPaymentsInterface
                 'type_profile',
                 TypeProfileTrans::class,
                 'type_profile_trans',
-                'type_profile_trans.event = type_profile.event AND type_profile_trans.local = :local'
+                'type_profile_trans.event = type_profile.event AND type_profile_trans.local = :local',
             );
 
 

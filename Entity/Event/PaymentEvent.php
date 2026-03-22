@@ -102,23 +102,20 @@ class PaymentEvent extends EntityEvent
         return (string) $this->id;
     }
 
-    public function getId(): PaymentEventUid
+    public function getMain(): ?PaymentUid
     {
-        return $this->id;
+        return $this->main;
     }
-
 
     public function setMain(PaymentUid|Payment $main): void
     {
         $this->main = $main instanceof Payment ? $main->getId() : $main;
     }
 
-
-    public function getMain(): ?PaymentUid
+    public function getId(): PaymentEventUid
     {
-        return $this->main;
+        return $this->id;
     }
-
 
     public function getDto($dto): mixed
     {
